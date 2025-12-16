@@ -1,0 +1,2816 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playrobotic - Sistema de Ponto de Vendas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Todos os estilos anteriores mantidos... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #7f8c8d;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary);
+            color: white;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            margin-right: 10px;
+            color: var(--secondary);
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(52, 152, 219, 0.2);
+            border-left: 4px solid var(--secondary);
+            color: white;
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .header-title h1 {
+            color: var(--primary);
+            font-size: 28px;
+        }
+
+        .header-title p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-details h3 {
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+        .user-details p {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        /* Cards */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .card-icon.clientes {
+            background-color: #3498db;
+        }
+
+        .card-icon.produtos {
+            background-color: #2ecc71;
+        }
+
+        .card-icon.vendas {
+            background-color: #e74c3c;
+        }
+
+        .card-icon.funcionarios {
+            background-color: #f39c12;
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .card-label {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        /* Tables */
+        .table-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-title {
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary);
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+        }
+
+        .edit-btn {
+            background-color: var(--warning);
+        }
+
+        .delete-btn {
+            background-color: var(--accent);
+        }
+
+        .view-btn {
+            background-color: var(--secondary);
+        }
+
+        /* Forms */
+        .form-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-title {
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+
+        .form-group {
+            flex: 1 0 300px;
+            padding: 0 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* Dashboard charts */
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .chart-placeholder {
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        /* Tela de Novo Pedido - NOVO ESTILO */
+        .novo-pedido-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .novo-pedido-container.active {
+            display: block;
+        }
+
+        .pedido-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .pedido-title {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .pedido-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-group {
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .info-value {
+            font-size: 18px;
+            color: var(--dark);
+        }
+
+        .pedido-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 992px) {
+            .pedido-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .produtos-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .carrinho-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Produtos Grid */
+        .produtos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .produto-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .produto-card:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .produto-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .produto-card.disabled:hover {
+            transform: none;
+            border-color: #ddd;
+            box-shadow: none;
+        }
+
+        .produto-nome {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .produto-preco {
+            color: var(--success);
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .produto-info {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+
+        .produto-estoque {
+            font-size: 11px;
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        .produto-estoque.baixo {
+            color: var(--accent);
+        }
+
+        /* Carrinho */
+        .carrinho-items {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .carrinho-vazio {
+            text-align: center;
+            color: var(--gray);
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .carrinho-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            background-color: white;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .carrinho-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .item-info h4 {
+            font-size: 14px;
+            margin-bottom: 3px;
+            color: var(--primary);
+        }
+
+        .item-detalhes {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .item-quantidade {
+            width: 50px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 14px;
+        }
+
+        .btn-quantidade {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .btn-remover {
+            background-color: var(--accent);
+        }
+
+        /* Totais */
+        .carrinho-total {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #ddd;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .total-row:last-child {
+            border-bottom: none;
+        }
+
+        .total-final {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid var(--primary);
+        }
+
+        /* Ações do Pedido */
+        .pedido-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        /* Recomendações */
+        .recomendacoes-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e8f4fc;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .recomendacoes-title {
+            font-size: 16px;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recomendacoes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .recomendacao-item {
+            background-color: white;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .recomendacao-item:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+            }
+            .logo-text, .nav-link span {
+                display: none;
+            }
+            .nav-link {
+                justify-content: center;
+                padding: 15px 10px;
+            }
+            .nav-link i {
+                margin-right: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+            .table-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .pedido-grid {
+                grid-template-columns: 1fr;
+            }
+            .pedido-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .pedido-actions .btn {
+                width: 100%;
+            }
+        }
+
+        /* Page content */
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        /* Status badges */
+        .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-pendente {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-faturado {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelado {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Mensagens */
+        .message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .message-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        /* Badge para status */
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Busca de produtos */
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .categorias-filter {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .categoria-btn {
+            padding: 8px 15px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .categoria-btn.active {
+            background-color: var(--secondary);
+            color: white;
+            border-color: var(--secondary);
+        }
+
+        /* Estrelas para avaliações */
+        .stars {
+            color: #f39c12;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-robot"></i></div>
+                <div class="logo-text">Playrobotic</div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-page="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="clientes">
+                        <i class="fas fa-users"></i>
+                        <span>Clientes</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="funcionarios">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Funcionários</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="produtos">
+                        <i class="fas fa-boxes"></i>
+                        <span>Produtos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="pedidos">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Pedidos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-page="relatorios">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Relatórios</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-title">
+                    <h1 id="page-title">Dashboard</h1>
+                    <p id="page-description">Sistema de Ponto de Vendas - Playrobotic</p>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">AD</div>
+                    <div class="user-details">
+                        <h3>Admin</h3>
+                        <p>Administrador do Sistema</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard -->
+            <section id="dashboard" class="page-content active">
+                <!-- Conteúdo do dashboard (mantido igual)... -->
+                <div class="cards-container">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon clientes">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="card-change positive">
+                                <i class="fas fa-arrow-up"></i> 12%
+                            </div>
+                        </div>
+                        <div class="card-value">1,254</div>
+                        <div class="card-label">Clientes Cadastrados</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon produtos">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                            <div class="card-change positive">
+                                <i class="fas fa-arrow-up"></i> 5%
+                            </div>
+                        </div>
+                        <div class="card-value">348</div>
+                        <div class="card-label">Produtos em Estoque</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon vendas">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <div class="card-change positive">
+                                <i class="fas fa-arrow-up"></i> 23%
+                            </div>
+                        </div>
+                        <div class="card-value">R$ 48,560</div>
+                        <div class="card-label">Vendas do Mês</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon funcionarios">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="card-change neutral">
+                                <i class="fas fa-minus"></i> 0%
+                            </div>
+                        </div>
+                        <div class="card-value">15</div>
+                        <div class="card-label">Funcionários Ativos</div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-container">
+                    <div class="chart-box">
+                        <h3 class="chart-title">Vendas por Dia (Última Semana)</h3>
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-line"></i> Gráfico de vendas por período
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <h3 class="chart-title">Produtos Mais Vendidos</h3>
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-pie"></i> Gráfico de produtos mais populares
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2 class="table-title">Pedidos Recentes</h2>
+                        <button class="btn btn-primary">Ver Todos</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Pedido</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Valor Total</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#PED-1001</td>
+                                <td>João Silva</td>
+                                <td>15/03/2025</td>
+                                <td>R$ 1,250.00</td>
+                                <td><span class="status status-faturado">Faturado</span></td>
+                                <td class="actions">
+                                    <div class="action-btn view-btn" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#PED-1002</td>
+                                <td>Maria Oliveira</td>
+                                <td>14/03/2025</td>
+                                <td>R$ 890.50</td>
+                                <td><span class="status status-pendente">Pendente</span></td>
+                                <td class="actions">
+                                    <div class="action-btn view-btn" title="Visualizar">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Clientes (mantido igual)... -->
+            <section id="clientes" class="page-content">
+                <div class="message message-success" id="cliente-message" style="display: none;"></div>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2 class="table-title">Gerenciamento de Clientes</h2>
+                        <div>
+                            <button class="btn btn-primary" id="add-cliente">Adicionar Cliente</button>
+                        </div>
+                    </div>
+                    <table id="clientes-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Data Cadastro</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clientes-tbody">
+                            <!-- Clientes serão carregados dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Formulário Cliente -->
+                <div id="cliente-form-container" class="form-container" style="display: none;">
+                    <h2 class="form-title" id="cliente-form-title">Adicionar Cliente</h2>
+                    <form id="cliente-form">
+                        <input type="hidden" id="cliente-id" value="">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cliente-nome">Nome Completo *</label>
+                                <input type="text" id="cliente-nome" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cliente-email">Email *</label>
+                                <input type="email" id="cliente-email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cliente-telefone">Telefone</label>
+                                <input type="text" id="cliente-telefone" class="form-control" placeholder="(81) 99999-9999">
+                            </div>
+                            <div class="form-group">
+                                <label for="cliente-cpf">CPF</label>
+                                <input type="text" id="cliente-cpf" class="form-control" placeholder="999.999.999-99">
+                            </div>
+                            <div class="form-group">
+                                <label for="cliente-endereco">Endereço</label>
+                                <input type="text" id="cliente-endereco" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="cliente-cidade">Cidade</label>
+                                <input type="text" id="cliente-cidade" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="cliente-estado">Estado</label>
+                                <select id="cliente-estado" class="form-control">
+                                    <option value="">Selecione...</option>
+                                    <option value="PE">Pernambuco</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cliente-status">Status</label>
+                                <select id="cliente-status" class="form-control">
+                                    <option value="ativo">Ativo</option>
+                                    <option value="inativo">Inativo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-danger" id="cancel-cliente">Cancelar</button>
+                            <button type="submit" class="btn btn-success" id="cliente-submit-btn">Salvar Cliente</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Funcionários (mantido igual)... -->
+            <section id="funcionarios" class="page-content">
+                <div class="message message-success" id="funcionario-message" style="display: none;"></div>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2 class="table-title">Gerenciamento de Funcionários</h2>
+                        <div>
+                            <button class="btn btn-primary" id="add-funcionario">Adicionar Funcionário</button>
+                        </div>
+                    </div>
+                    <table id="funcionarios-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Cargo</th>
+                                <th>Tipo Contrato</th>
+                                <th>Salário Base</th>
+                                <th>Comissão</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="funcionarios-tbody">
+                            <!-- Funcionários serão carregados dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Formulário Funcionário -->
+                <div id="funcionario-form-container" class="form-container" style="display: none;">
+                    <h2 class="form-title" id="funcionario-form-title">Adicionar Funcionário</h2>
+                    <form id="funcionario-form">
+                        <input type="hidden" id="funcionario-id" value="">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="funcionario-nome">Nome Completo *</label>
+                                <input type="text" id="funcionario-nome" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="funcionario-cargo">Cargo *</label>
+                                <select id="funcionario-cargo" class="form-control" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Vendedor">Vendedor</option>
+                                    <option value="Gerente">Gerente</option>
+                                    <option value="Estoquista">Estoquista</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="funcionario-contrato">Tipo de Contrato *</label>
+                                <select id="funcionario-contrato" class="form-control" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Fixo">Fixo</option>
+                                    <option value="Comissionado">Comissionado</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="funcionario-salario">Salário Base (R$) *</label>
+                                <input type="number" id="funcionario-salario" class="form-control" required step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="funcionario-comissao">Percentual Comissão (%)</label>
+                                <input type="number" id="funcionario-comissao" class="form-control" min="0" max="100" step="0.5" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="funcionario-email">Email</label>
+                                <input type="email" id="funcionario-email" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="funcionario-telefone">Telefone</label>
+                                <input type="text" id="funcionario-telefone" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="funcionario-status">Status</label>
+                                <select id="funcionario-status" class="form-control">
+                                    <option value="ativo">Ativo</option>
+                                    <option value="inativo">Inativo</option>
+                                    <option value="ferias">Férias</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-danger" id="cancel-funcionario">Cancelar</button>
+                            <button type="submit" class="btn btn-success" id="funcionario-submit-btn">Salvar Funcionário</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Produtos (mantido igual)... -->
+            <section id="produtos" class="page-content">
+                <div class="message message-success" id="produto-message" style="display: none;"></div>
+                
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2 class="table-title">Gerenciamento de Produtos</h2>
+                        <div>
+                            <button class="btn btn-primary" id="add-produto">Adicionar Produto</button>
+                        </div>
+                    </div>
+                    <table id="produtos-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Preço</th>
+                                <th>Estoque</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="produtos-tbody">
+                            <!-- Produtos serão carregados dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Formulário Produto -->
+                <div id="produto-form-container" class="form-container" style="display: none;">
+                    <h2 class="form-title" id="produto-form-title">Adicionar Produto</h2>
+                    <form id="produto-form">
+                        <input type="hidden" id="produto-id" value="">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="produto-codigo">Código do Produto *</label>
+                                <input type="text" id="produto-codigo" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="produto-nome">Nome do Produto *</label>
+                                <input type="text" id="produto-nome" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="produto-categoria">Categoria *</label>
+                                <select id="produto-categoria" class="form-control" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Celulares">Celulares</option>
+                                    <option value="Computadores">Computadores</option>
+                                    <option value="Tablets">Tablets</option>
+                                    <option value="Acessórios">Acessórios</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="produto-descricao">Descrição</label>
+                                <textarea id="produto-descricao" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="produto-preco">Preço (R$) *</label>
+                                <input type="number" id="produto-preco" class="form-control" required step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="produto-custo">Custo (R$)</label>
+                                <input type="number" id="produto-custo" class="form-control" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label for="produto-estoque">Quantidade em Estoque *</label>
+                                <input type="number" id="produto-estoque" class="form-control" required min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="produto-estoque-min">Estoque Mínimo</label>
+                                <input type="number" id="produto-estoque-min" class="form-control" min="0" value="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="produto-status">Status</label>
+                                <select id="produto-status" class="form-control">
+                                    <option value="ativo">Ativo</option>
+                                    <option value="inativo">Inativo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-danger" id="cancel-produto">Cancelar</button>
+                            <button type="submit" class="btn btn-success" id="produto-submit-btn">Salvar Produto</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Pedidos - COM FUNCIONALIDADE COMPLETA DE NOVO PEDIDO -->
+            <section id="pedidos" class="page-content">
+                <!-- Mensagem de sucesso -->
+                <div class="message message-success" id="pedido-message" style="display: none;"></div>
+                
+                <!-- Lista de Pedidos (modo padrão) -->
+                <div class="table-container" id="lista-pedidos">
+                    <div class="table-header">
+                        <h2 class="table-title">Gerenciamento de Pedidos</h2>
+                        <div>
+                            <button class="btn btn-primary" id="novo-pedido-btn">
+                                <i class="fas fa-plus"></i> Novo Pedido
+                            </button>
+                        </div>
+                    </div>
+                    <table id="pedidos-table">
+                        <thead>
+                            <tr>
+                                <th>ID Pedido</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Itens</th>
+                                <th>Valor Total</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pedidos-tbody">
+                            <!-- Pedidos serão carregados dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Tela de Novo Pedido (inicialmente oculta) -->
+                <div id="novo-pedido-container" class="novo-pedido-container">
+                    <div class="pedido-header">
+                        <h2 class="pedido-title">Novo Pedido</h2>
+                        <div>
+                            <button class="btn btn-danger" id="cancelar-pedido">
+                                <i class="fas fa-times"></i> Cancelar
+                            </button>
+                            <button class="btn btn-success" id="finalizar-pedido">
+                                <i class="fas fa-check"></i> Finalizar Pedido
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Informações do Pedido -->
+                    <div class="pedido-info">
+                        <div class="info-group">
+                            <label class="info-label" for="pedido-cliente">Cliente *</label>
+                            <select id="pedido-cliente" class="form-control" required>
+                                <option value="">Selecione um cliente...</option>
+                                <!-- Clientes serão carregados dinamicamente -->
+                            </select>
+                        </div>
+                        <div class="info-group">
+                            <label class="info-label" for="pedido-vendedor">Vendedor *</label>
+                            <select id="pedido-vendedor" class="form-control" required>
+                                <option value="">Selecione um vendedor...</option>
+                                <!-- Vendedores serão carregados dinamicamente -->
+                            </select>
+                        </div>
+                        <div class="info-group">
+                            <label class="info-label">Data do Pedido</label>
+                            <div class="info-value" id="pedido-data">16/03/2025</div>
+                        </div>
+                        <div class="info-group">
+                            <label class="info-label" for="pedido-status">Status</label>
+                            <select id="pedido-status" class="form-control">
+                                <option value="pendente">Pendente</option>
+                                <option value="faturado">Faturado</option>
+                                <option value="cancelado">Cancelado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Grid Principal: Produtos + Carrinho -->
+                    <div class="pedido-grid">
+                        <!-- Coluna Esquerda: Produtos Disponíveis -->
+                        <div class="produtos-section">
+                            <h3 class="section-title">Produtos Disponíveis</h3>
+                            
+                            <!-- Busca e Filtros -->
+                            <div class="search-container">
+                                <input type="text" id="busca-produto" class="search-input" placeholder="Buscar produto por nome...">
+                                <div class="categorias-filter" id="categorias-filtro">
+                                    <!-- Categorias serão carregadas dinamicamente -->
+                                </div>
+                            </div>
+                            
+                            <!-- Grid de Produtos -->
+                            <div class="produtos-grid" id="produtos-disponiveis">
+                                <!-- Produtos serão carregados dinamicamente -->
+                            </div>
+                        </div>
+
+                        <!-- Coluna Direita: Carrinho -->
+                        <div class="carrinho-section">
+                            <h3 class="section-title">Carrinho de Compras</h3>
+                            
+                            <!-- Itens do Carrinho -->
+                            <div class="carrinho-items" id="carrinho-itens">
+                                <div class="carrinho-vazio">Nenhum produto no carrinho</div>
+                            </div>
+
+                            <!-- Totais -->
+                            <div class="carrinho-total">
+                                <div class="total-row">
+                                    <span>Subtotal:</span>
+                                    <span id="subtotal">R$ 0,00</span>
+                                </div>
+                                <div class="total-row">
+                                    <span>Desconto:</span>
+                                    <span id="desconto">R$ 0,00</span>
+                                </div>
+                                <div class="total-row">
+                                    <span>Total de Itens:</span>
+                                    <span id="total-itens">0</span>
+                                </div>
+                                <div class="total-row total-final">
+                                    <span>Total do Pedido:</span>
+                                    <span id="total-pedido">R$ 0,00</span>
+                                </div>
+                            </div>
+
+                            <!-- Ações do Carrinho -->
+                            <div class="pedido-actions">
+                                <button class="btn btn-warning" id="aplicar-desconto-btn">
+                                    <i class="fas fa-tag"></i> Desconto
+                                </button>
+                                <button class="btn btn-danger" id="limpar-carrinho-btn">
+                                    <i class="fas fa-trash"></i> Limpar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seção de Recomendações -->
+                    <div class="recomendacoes-section" id="recomendacoes-container" style="display: none;">
+                        <div class="recomendacoes-title">
+                            <i class="fas fa-lightbulb"></i> Recomendações para você
+                        </div>
+                        <div class="recomendacoes-grid" id="produtos-recomendados">
+                            <!-- Produtos recomendados serão carregados aqui -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Relatórios (mantido igual)... -->
+            <section id="relatorios" class="page-content">
+                <div class="cards-container">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon clientes">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="card-value">Vendas</div>
+                        <div class="card-label">Relatório de vendas por período</div>
+                        <button class="btn btn-primary" style="margin-top: 15px; width: 100%;">Gerar Relatório</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon produtos">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                        </div>
+                        <div class="card-value">Estoque</div>
+                        <div class="card-label">Análise de estoque e reposição</div>
+                        <button class="btn btn-primary" style="margin-top: 15px; width: 100%;">Gerar Relatório</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2 class="table-title">Relatório de Vendas - Março 2025</h2>
+                        <div>
+                            <select class="form-control" style="width: 200px;">
+                                <option>Março 2025</option>
+                                <option>Fevereiro 2025</option>
+                            </select>
+                            <button class="btn btn-primary" style="margin-left: 10px;">Exportar CSV</button>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Categoria</th>
+                                <th>Quantidade Vendida</th>
+                                <th>Valor Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Smartphone XYZ</td>
+                                <td>Celulares</td>
+                                <td>18</td>
+                                <td>R$ 34,182.00</td>
+                            </tr>
+                            <tr>
+                                <td>Notebook ABC</td>
+                                <td>Computadores</td>
+                                <td>8</td>
+                                <td>R$ 27,992.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal de Desconto -->
+    <div id="desconto-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Aplicar Desconto</h3>
+                <button class="modal-close" id="close-desconto-modal">&times;</button>
+            </div>
+            <div class="form-group">
+                <label for="tipo-desconto">Tipo de Desconto</label>
+                <select id="tipo-desconto" class="form-control">
+                    <option value="percentual">Percentual (%)</option>
+                    <option value="valor">Valor Fixo (R$)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="valor-desconto">Valor do Desconto</label>
+                <input type="number" id="valor-desconto" class="form-control" step="0.01" min="0" placeholder="0.00">
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-danger" id="cancelar-desconto-modal">Cancelar</button>
+                <button class="btn btn-success" id="aplicar-desconto-modal-btn">Aplicar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== DADOS DO SISTEMA ==========
+        
+        // Dados dos clientes (mantido da implementação anterior)
+        let clientes = [
+            { id: 1, codigo: "#CLI-001", nome: "João Silva", email: "joao.silva@email.com", telefone: "(81) 99999-9999", cpf: "123.456.789-00", endereco: "Rua A, 123", cidade: "Recife", estado: "PE", status: "ativo", dataCadastro: "15/02/2024", totalCompras: 5250.00 },
+            { id: 2, codigo: "#CLI-002", nome: "Maria Oliveira", email: "maria.oliveira@email.com", telefone: "(81) 98888-8888", cpf: "987.654.321-00", endereco: "Av. B, 456", cidade: "Recife", estado: "PE", status: "ativo", dataCadastro: "20/03/2024", totalCompras: 3890.50 }
+        ];
+
+        // Dados dos funcionários (mantido da implementação anterior)
+        let funcionarios = [
+            { id: 1, codigo: "#FUNC-001", nome: "José Almeida", cargo: "Vendedor", contrato: "Comissionado", salario: 1500.00, comissao: 5, email: "jose.almeida@playrobotic.com", telefone: "(81) 96666-6666", status: "ativo" },
+            { id: 2, codigo: "#FUNC-002", nome: "Fernanda Lima", cargo: "Gerente", contrato: "Fixo", salario: 4500.00, comissao: 0, email: "fernanda.lima@playrobotic.com", telefone: "(81) 95555-5555", status: "ativo" }
+        ];
+
+        // Dados dos produtos (expandido para o sistema de pedidos)
+        let produtos = [
+            { id: 1, codigo: "#PROD-001", nome: "Smartphone XYZ", categoria: "Celulares", descricao: "Smartphone com tela 6.5\", 128GB", preco: 1899.00, custo: 1200.00, estoque: 25, estoqueMin: 5, status: "ativo", visualizacoes: 1245, avaliacao: 4.2 },
+            { id: 2, codigo: "#PROD-002", nome: "Notebook ABC", categoria: "Computadores", descricao: "Notebook i7, 16GB RAM, 512GB SSD", preco: 3499.00, custo: 2500.00, estoque: 12, estoqueMin: 3, status: "ativo", visualizacoes: 890, avaliacao: 5.0 },
+            { id: 3, codigo: "#PROD-003", nome: "Fone Bluetooth", categoria: "Acessórios", descricao: "Fone de ouvido sem fio com cancelamento de ruído", preco: 199.00, custo: 120.00, estoque: 78, estoqueMin: 10, status: "ativo", visualizacoes: 2345, avaliacao: 3.4 },
+            { id: 4, codigo: "#PROD-004", nome: "Tablet 10\"", categoria: "Tablets", descricao: "Tablet com tela 10 polegadas, 64GB", preco: 1299.00, custo: 800.00, estoque: 8, estoqueMin: 2, status: "ativo", visualizacoes: 567, avaliacao: 4.5 },
+            { id: 5, codigo: "#PROD-005", nome: "Smartwatch Pro", categoria: "Wearables", descricao: "Relógio inteligente com monitor cardíaco", preco: 899.00, custo: 550.00, estoque: 15, estoqueMin: 5, status: "ativo", visualizacoes: 987, avaliacao: 4.0 },
+            { id: 6, codigo: "#PROD-006", nome: "Monitor 24\"", categoria: "Computadores", descricao: "Monitor Full HD 24 polegadas", preco: 799.00, custo: 500.00, estoque: 20, estoqueMin: 5, status: "ativo", visualizacoes: 654, avaliacao: 4.3 },
+            { id: 7, codigo: "#PROD-007", nome: "Teclado Mecânico", categoria: "Acessórios", descricao: "Teclado mecânico RGB", preco: 299.00, custo: 180.00, estoque: 35, estoqueMin: 10, status: "ativo", visualizacoes: 432, avaliacao: 4.1 },
+            { id: 8, codigo: "#PROD-008", nome: "Mouse Sem Fio", categoria: "Acessórios", descricao: "Mouse óptico sem fio", preco: 89.90, custo: 50.00, estoque: 45, estoqueMin: 15, status: "ativo", visualizacoes: 321, avaliacao: 4.2 },
+            { id: 9, codigo: "#PROD-009", nome: "Carregador Rápido", categoria: "Acessórios", descricao: "Carregador rápido 30W", preco: 129.90, custo: 70.00, estoque: 30, estoqueMin: 10, status: "ativo", visualizacoes: 567, avaliacao: 4.5 }
+        ];
+
+        // Dados de pedidos existentes
+        let pedidos = [
+            { id: 1, codigo: "#PED-1001", clienteId: 1, vendedorId: 1, data: "15/03/2025", itens: 3, valorTotal: 1250.00, status: "faturado" },
+            { id: 2, codigo: "#PED-1002", clienteId: 2, vendedorId: 1, data: "14/03/2025", itens: 2, valorTotal: 890.50, status: "pendente" }
+        ];
+
+        // Dados de produtos recomendados (associação de produtos)
+        const produtosRecomendados = {
+            1: [3, 9], // Smartphone XYZ -> Fone Bluetooth, Carregador Rápido
+            2: [6, 7], // Notebook ABC -> Monitor 24", Teclado Mecânico
+            3: [9],    // Fone Bluetooth -> Carregador Rápido
+            4: [3, 8], // Tablet 10" -> Fone Bluetooth, Mouse Sem Fio
+            5: [3, 9], // Smartwatch Pro -> Fone Bluetooth, Carregador Rápido
+            6: [2, 7], // Monitor 24" -> Notebook ABC, Teclado Mecânico
+            7: [2, 6], // Teclado Mecânico -> Notebook ABC, Monitor 24"
+            8: [2, 4], // Mouse Sem Fio -> Notebook ABC, Tablet 10"
+            9: [1, 3]  // Carregador Rápido -> Smartphone XYZ, Fone Bluetooth
+        };
+
+        // ========== VARIÁVEIS DO NOVO PEDIDO ==========
+        let carrinho = [];
+        let desconto = 0;
+        let categoriaFiltro = 'todos';
+
+        // ========== FUNCIONALIDADES GERAIS ==========
+
+        // Navegação entre páginas (mantida da implementação anterior)
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                document.querySelectorAll('.nav-link').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                this.classList.add('active');
+                
+                document.querySelectorAll('.page-content').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                const pageId = this.getAttribute('data-page');
+                document.getElementById(pageId).classList.add('active');
+                
+                updatePageTitle(pageId);
+                
+                // Se for a página de pedidos, mostra a lista de pedidos
+                if (pageId === 'pedidos') {
+                    mostrarListaPedidos();
+                }
+                
+                // Carrega dados ao acessar cada página
+                if (pageId === 'clientes') carregarClientes();
+                if (pageId === 'funcionarios') carregarFuncionarios();
+                if (pageId === 'produtos') carregarProdutos();
+                if (pageId === 'pedidos') carregarPedidos();
+            });
+        });
+
+        function updatePageTitle(pageId) {
+            const pageTitle = document.getElementById('page-title');
+            const pageDescription = document.getElementById('page-description');
+            
+            const titles = {
+                'dashboard': ['Dashboard', 'Sistema de Ponto de Vendas - Playrobotic'],
+                'clientes': ['Clientes', 'Gerenciamento de clientes - CRUD'],
+                'funcionarios': ['Funcionários', 'Gerenciamento de funcionários - CRUD'],
+                'produtos': ['Produtos', 'Gerenciamento de produtos e estoque - CRUD'],
+                'pedidos': ['Pedidos', 'Gerenciamento de pedidos de venda'],
+                'relatorios': ['Relatórios', 'Relatórios estratégicos e análise de dados']
+            };
+            
+            if (titles[pageId]) {
+                pageTitle.textContent = titles[pageId][0];
+                pageDescription.textContent = titles[pageId][1];
+            }
+        }
+
+        // ========== FUNCIONALIDADES DE CLIENTES (MANTIDAS) ==========
+
+        // Carregar clientes na tabela
+        function carregarClientes() {
+            const tbody = document.getElementById('clientes-tbody');
+            tbody.innerHTML = '';
+            
+            clientes.forEach(cliente => {
+                const statusClass = cliente.status === 'ativo' ? 'badge-success' : 'badge-danger';
+                const statusText = cliente.status === 'ativo' ? 'Ativo' : 'Inativo';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${cliente.codigo}</td>
+                    <td>${cliente.nome}</td>
+                    <td>${cliente.email}</td>
+                    <td>${cliente.telefone}</td>
+                    <td>${cliente.dataCadastro}</td>
+                    <td><span class="badge ${statusClass}">${statusText}</span></td>
+                    <td class="actions">
+                        <div class="action-btn edit-btn" title="Editar" data-id="${cliente.id}">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="action-btn delete-btn" title="Excluir" data-id="${cliente.id}">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Adiciona eventos aos botões
+            adicionarEventosClientes();
+        }
+
+        // Adicionar eventos aos botões de clientes (mantido da implementação anterior)
+        function adicionarEventosClientes() {
+            // Botão adicionar cliente
+            document.getElementById('add-cliente').addEventListener('click', function() {
+                document.getElementById('cliente-form-container').style.display = 'block';
+                document.getElementById('cliente-form-title').textContent = 'Adicionar Cliente';
+                document.getElementById('cliente-id').value = '';
+                document.getElementById('cliente-form').reset();
+                document.getElementById('cliente-status').value = 'ativo';
+                document.getElementById('cliente-submit-btn').textContent = 'Salvar Cliente';
+                document.getElementById('cliente-form-container').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // Botão cancelar cliente
+            document.getElementById('cancel-cliente').addEventListener('click', function() {
+                document.getElementById('cliente-form-container').style.display = 'none';
+            });
+
+            // Formulário cliente
+            document.getElementById('cliente-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                salvarCliente();
+            });
+
+            // Botões editar cliente
+            document.querySelectorAll('#clientes-tbody .edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const clienteId = parseInt(this.getAttribute('data-id'));
+                    editarCliente(clienteId);
+                });
+            });
+
+            // Botões excluir cliente
+            document.querySelectorAll('#clientes-tbody .delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const clienteId = parseInt(this.getAttribute('data-id'));
+                    excluirCliente(clienteId);
+                });
+            });
+        }
+
+        // Editar cliente (mantido da implementação anterior)
+        function editarCliente(id) {
+            const cliente = clientes.find(c => c.id === id);
+            if (!cliente) return;
+            
+            document.getElementById('cliente-form-container').style.display = 'block';
+            document.getElementById('cliente-form-title').textContent = 'Editar Cliente';
+            document.getElementById('cliente-id').value = cliente.id;
+            document.getElementById('cliente-nome').value = cliente.nome;
+            document.getElementById('cliente-email').value = cliente.email;
+            document.getElementById('cliente-telefone').value = cliente.telefone;
+            document.getElementById('cliente-cpf').value = cliente.cpf;
+            document.getElementById('cliente-endereco').value = cliente.endereco;
+            document.getElementById('cliente-cidade').value = cliente.cidade;
+            document.getElementById('cliente-estado').value = cliente.estado;
+            document.getElementById('cliente-status').value = cliente.status;
+            document.getElementById('cliente-submit-btn').textContent = 'Atualizar Cliente';
+            document.getElementById('cliente-form-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Salvar cliente (mantido da implementação anterior)
+        function salvarCliente() {
+            const id = document.getElementById('cliente-id').value;
+            const nome = document.getElementById('cliente-nome').value;
+            const email = document.getElementById('cliente-email').value;
+            const telefone = document.getElementById('cliente-telefone').value;
+            const cpf = document.getElementById('cliente-cpf').value;
+            const endereco = document.getElementById('cliente-endereco').value;
+            const cidade = document.getElementById('cliente-cidade').value;
+            const estado = document.getElementById('cliente-estado').value;
+            const status = document.getElementById('cliente-status').value;
+            
+            if (id) {
+                // Atualizar cliente existente
+                const index = clientes.findIndex(c => c.id === parseInt(id));
+                if (index !== -1) {
+                    clientes[index] = {
+                        ...clientes[index],
+                        nome, email, telefone, cpf, endereco, cidade, estado, status
+                    };
+                    showMessage('cliente-message', 'Cliente atualizado com sucesso!', 'success');
+                }
+            } else {
+                // Adicionar novo cliente
+                const novoId = clientes.length > 0 ? Math.max(...clientes.map(c => c.id)) + 1 : 1;
+                const dataCadastro = new Date().toLocaleDateString('pt-BR');
+                const codigo = `#CLI-${novoId.toString().padStart(3, '0')}`;
+                
+                clientes.push({
+                    id: novoId,
+                    codigo,
+                    nome,
+                    email,
+                    telefone,
+                    cpf,
+                    endereco,
+                    cidade,
+                    estado,
+                    status,
+                    dataCadastro,
+                    totalCompras: 0
+                });
+                
+                showMessage('cliente-message', 'Cliente adicionado com sucesso!', 'success');
+            }
+            
+            document.getElementById('cliente-form-container').style.display = 'none';
+            carregarClientes();
+            // Atualiza também a lista de clientes para pedidos
+            if (document.getElementById('pedido-cliente')) {
+                atualizarClientesParaPedidos();
+            }
+        }
+
+        // Excluir cliente (mantido da implementação anterior)
+        function excluirCliente(id) {
+            if (confirm('Tem certeza que deseja excluir este cliente?')) {
+                clientes = clientes.filter(c => c.id !== id);
+                showMessage('cliente-message', 'Cliente excluído com sucesso!', 'success');
+                carregarClientes();
+                if (document.getElementById('pedido-cliente')) {
+                    atualizarClientesParaPedidos();
+                }
+            }
+        }
+
+        // ========== FUNCIONALIDADES DE FUNCIONÁRIOS (MANTIDAS) ==========
+
+        // Carregar funcionários na tabela
+        function carregarFuncionarios() {
+            const tbody = document.getElementById('funcionarios-tbody');
+            tbody.innerHTML = '';
+            
+            funcionarios.forEach(funcionario => {
+                let statusClass = 'badge-success';
+                let statusText = 'Ativo';
+                
+                if (funcionario.status === 'inativo') {
+                    statusClass = 'badge-danger';
+                    statusText = 'Inativo';
+                } else if (funcionario.status === 'ferias') {
+                    statusClass = 'badge-warning';
+                    statusText = 'Férias';
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${funcionario.codigo}</td>
+                    <td>${funcionario.nome}</td>
+                    <td>${funcionario.cargo}</td>
+                    <td>${funcionario.contrato}</td>
+                    <td>R$ ${funcionario.salario.toFixed(2)}</td>
+                    <td>${funcionario.comissao}%</td>
+                    <td><span class="badge ${statusClass}">${statusText}</span></td>
+                    <td class="actions">
+                        <div class="action-btn edit-btn" title="Editar" data-id="${funcionario.id}">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="action-btn delete-btn" title="Excluir" data-id="${funcionario.id}">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Adiciona eventos aos botões
+            adicionarEventosFuncionarios();
+        }
+
+        // Adicionar eventos aos botões de funcionários (mantido da implementação anterior)
+        function adicionarEventosFuncionarios() {
+            // Botão adicionar funcionário
+            document.getElementById('add-funcionario').addEventListener('click', function() {
+                document.getElementById('funcionario-form-container').style.display = 'block';
+                document.getElementById('funcionario-form-title').textContent = 'Adicionar Funcionário';
+                document.getElementById('funcionario-id').value = '';
+                document.getElementById('funcionario-form').reset();
+                document.getElementById('funcionario-comissao').value = '0';
+                document.getElementById('funcionario-status').value = 'ativo';
+                document.getElementById('funcionario-submit-btn').textContent = 'Salvar Funcionário';
+                document.getElementById('funcionario-form-container').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // Botão cancelar funcionário
+            document.getElementById('cancel-funcionario').addEventListener('click', function() {
+                document.getElementById('funcionario-form-container').style.display = 'none';
+            });
+
+            // Formulário funcionário
+            document.getElementById('funcionario-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                salvarFuncionario();
+            });
+
+            // Botões editar funcionário
+            document.querySelectorAll('#funcionarios-tbody .edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const funcionarioId = parseInt(this.getAttribute('data-id'));
+                    editarFuncionario(funcionarioId);
+                });
+            });
+
+            // Botões excluir funcionário
+            document.querySelectorAll('#funcionarios-tbody .delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const funcionarioId = parseInt(this.getAttribute('data-id'));
+                    excluirFuncionario(funcionarioId);
+                });
+            });
+        }
+
+        // Editar funcionário (mantido da implementação anterior)
+        function editarFuncionario(id) {
+            const funcionario = funcionarios.find(f => f.id === id);
+            if (!funcionario) return;
+            
+            document.getElementById('funcionario-form-container').style.display = 'block';
+            document.getElementById('funcionario-form-title').textContent = 'Editar Funcionário';
+            document.getElementById('funcionario-id').value = funcionario.id;
+            document.getElementById('funcionario-nome').value = funcionario.nome;
+            document.getElementById('funcionario-cargo').value = funcionario.cargo;
+            document.getElementById('funcionario-contrato').value = funcionario.contrato;
+            document.getElementById('funcionario-salario').value = funcionario.salario;
+            document.getElementById('funcionario-comissao').value = funcionario.comissao;
+            document.getElementById('funcionario-email').value = funcionario.email || '';
+            document.getElementById('funcionario-telefone').value = funcionario.telefone || '';
+            document.getElementById('funcionario-status').value = funcionario.status;
+            document.getElementById('funcionario-submit-btn').textContent = 'Atualizar Funcionário';
+            document.getElementById('funcionario-form-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Salvar funcionário (mantido da implementação anterior)
+        function salvarFuncionario() {
+            const id = document.getElementById('funcionario-id').value;
+            const nome = document.getElementById('funcionario-nome').value;
+            const cargo = document.getElementById('funcionario-cargo').value;
+            const contrato = document.getElementById('funcionario-contrato').value;
+            const salario = parseFloat(document.getElementById('funcionario-salario').value);
+            const comissao = parseFloat(document.getElementById('funcionario-comissao').value);
+            const email = document.getElementById('funcionario-email').value;
+            const telefone = document.getElementById('funcionario-telefone').value;
+            const status = document.getElementById('funcionario-status').value;
+            
+            if (id) {
+                // Atualizar funcionário existente
+                const index = funcionarios.findIndex(f => f.id === parseInt(id));
+                if (index !== -1) {
+                    funcionarios[index] = {
+                        ...funcionarios[index],
+                        nome, cargo, contrato, salario, comissao, email, telefone, status
+                    };
+                    showMessage('funcionario-message', 'Funcionário atualizado com sucesso!', 'success');
+                }
+            } else {
+                // Adicionar novo funcionário
+                const novoId = funcionarios.length > 0 ? Math.max(...funcionarios.map(f => f.id)) + 1 : 1;
+                const codigo = `#FUNC-${novoId.toString().padStart(3, '0')}`;
+                
+                funcionarios.push({
+                    id: novoId,
+                    codigo,
+                    nome,
+                    cargo,
+                    contrato,
+                    salario,
+                    comissao,
+                    email,
+                    telefone,
+                    status
+                });
+                
+                showMessage('funcionario-message', 'Funcionário adicionado com sucesso!', 'success');
+            }
+            
+            document.getElementById('funcionario-form-container').style.display = 'none';
+            carregarFuncionarios();
+            // Atualiza também a lista de funcionários para pedidos
+            if (document.getElementById('pedido-vendedor')) {
+                atualizarFuncionariosParaPedidos();
+            }
+        }
+
+        // Excluir funcionário (mantido da implementação anterior)
+        function excluirFuncionario(id) {
+            if (confirm('Tem certeza que deseja excluir este funcionário?')) {
+                funcionarios = funcionarios.filter(f => f.id !== id);
+                showMessage('funcionario-message', 'Funcionário excluído com sucesso!', 'success');
+                carregarFuncionarios();
+                if (document.getElementById('pedido-vendedor')) {
+                    atualizarFuncionariosParaPedidos();
+                }
+            }
+        }
+
+        // ========== FUNCIONALIDADES DE PRODUTOS (MANTIDAS) ==========
+
+        // Carregar produtos na tabela
+        function carregarProdutos() {
+            const tbody = document.getElementById('produtos-tbody');
+            tbody.innerHTML = '';
+            
+            produtos.forEach(produto => {
+                let statusClass = 'badge-success';
+                let statusText = 'Ativo';
+                
+                if (produto.status === 'inativo') {
+                    statusClass = 'badge-danger';
+                    statusText = 'Inativo';
+                } else if (produto.status === 'esgotado') {
+                    statusClass = 'badge-warning';
+                    statusText = 'Esgotado';
+                }
+                
+                // Verifica se precisa de reposição
+                const precisaReposicao = produto.estoque <= produto.estoqueMin;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${produto.codigo}</td>
+                    <td>${produto.nome}</td>
+                    <td>${produto.categoria}</td>
+                    <td>R$ ${produto.preco.toFixed(2)}</td>
+                    <td>
+                        ${produto.estoque}
+                        ${precisaReposicao ? '<span class="badge badge-warning" style="margin-left: 5px;">Repor</span>' : ''}
+                    </td>
+                    <td><span class="badge ${statusClass}">${statusText}</span></td>
+                    <td class="actions">
+                        <div class="action-btn edit-btn" title="Editar" data-id="${produto.id}">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="action-btn delete-btn" title="Excluir" data-id="${produto.id}">
+                            <i class="fas fa-trash"></i>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Adiciona eventos aos botões
+            adicionarEventosProdutos();
+        }
+
+        // Adicionar eventos aos botões de produtos (mantido da implementação anterior)
+        function adicionarEventosProdutos() {
+            // Botão adicionar produto
+            document.getElementById('add-produto').addEventListener('click', function() {
+                document.getElementById('produto-form-container').style.display = 'block';
+                document.getElementById('produto-form-title').textContent = 'Adicionar Produto';
+                document.getElementById('produto-id').value = '';
+                document.getElementById('produto-form').reset();
+                document.getElementById('produto-codigo').value = `#PROD-${(produtos.length + 1).toString().padStart(3, '0')}`;
+                document.getElementById('produto-estoque-min').value = '5';
+                document.getElementById('produto-status').value = 'ativo';
+                document.getElementById('produto-submit-btn').textContent = 'Salvar Produto';
+                document.getElementById('produto-form-container').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // Botão cancelar produto
+            document.getElementById('cancel-produto').addEventListener('click', function() {
+                document.getElementById('produto-form-container').style.display = 'none';
+            });
+
+            // Formulário produto
+            document.getElementById('produto-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                salvarProduto();
+            });
+
+            // Botões editar produto
+            document.querySelectorAll('#produtos-tbody .edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const produtoId = parseInt(this.getAttribute('data-id'));
+                    editarProduto(produtoId);
+                });
+            });
+
+            // Botões excluir produto
+            document.querySelectorAll('#produtos-tbody .delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const produtoId = parseInt(this.getAttribute('data-id'));
+                    excluirProduto(produtoId);
+                });
+            });
+        }
+
+        // Editar produto (mantido da implementação anterior)
+        function editarProduto(id) {
+            const produto = produtos.find(p => p.id === id);
+            if (!produto) return;
+            
+            document.getElementById('produto-form-container').style.display = 'block';
+            document.getElementById('produto-form-title').textContent = 'Editar Produto';
+            document.getElementById('produto-id').value = produto.id;
+            document.getElementById('produto-codigo').value = produto.codigo;
+            document.getElementById('produto-nome').value = produto.nome;
+            document.getElementById('produto-categoria').value = produto.categoria;
+            document.getElementById('produto-descricao').value = produto.descricao || '';
+            document.getElementById('produto-preco').value = produto.preco;
+            document.getElementById('produto-custo').value = produto.custo || '';
+            document.getElementById('produto-estoque').value = produto.estoque;
+            document.getElementById('produto-estoque-min').value = produto.estoqueMin || 5;
+            document.getElementById('produto-status').value = produto.status;
+            document.getElementById('produto-submit-btn').textContent = 'Atualizar Produto';
+            document.getElementById('produto-form-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Salvar produto (mantido da implementação anterior)
+        function salvarProduto() {
+            const id = document.getElementById('produto-id').value;
+            const codigo = document.getElementById('produto-codigo').value;
+            const nome = document.getElementById('produto-nome').value;
+            const categoria = document.getElementById('produto-categoria').value;
+            const descricao = document.getElementById('produto-descricao').value;
+            const preco = parseFloat(document.getElementById('produto-preco').value);
+            const custo = parseFloat(document.getElementById('produto-custo').value) || 0;
+            const estoque = parseInt(document.getElementById('produto-estoque').value);
+            const estoqueMin = parseInt(document.getElementById('produto-estoque-min').value) || 5;
+            const status = document.getElementById('produto-status').value;
+            
+            if (id) {
+                // Atualizar produto existente
+                const index = produtos.findIndex(p => p.id === parseInt(id));
+                if (index !== -1) {
+                    produtos[index] = {
+                        ...produtos[index],
+                        codigo, nome, categoria, descricao, preco, custo, estoque, estoqueMin, status
+                    };
+                    showMessage('produto-message', 'Produto atualizado com sucesso!', 'success');
+                }
+            } else {
+                // Adicionar novo produto
+                const novoId = produtos.length > 0 ? Math.max(...produtos.map(p => p.id)) + 1 : 1;
+                
+                produtos.push({
+                    id: novoId,
+                    codigo,
+                    nome,
+                    categoria,
+                    descricao,
+                    preco,
+                    custo,
+                    estoque,
+                    estoqueMin,
+                    status,
+                    visualizacoes: 0,
+                    avaliacao: 0
+                });
+                
+                showMessage('produto-message', 'Produto adicionado com sucesso!', 'success');
+            }
+            
+            document.getElementById('produto-form-container').style.display = 'none';
+            carregarProdutos();
+            // Atualiza também os produtos para novos pedidos
+            if (document.getElementById('produtos-disponiveis')) {
+                carregarProdutosParaPedidos();
+            }
+        }
+
+        // Excluir produto (mantido da implementação anterior)
+        function excluirProduto(id) {
+            if (confirm('Tem certeza que deseja excluir este produto?')) {
+                produtos = produtos.filter(p => p.id !== id);
+                showMessage('produto-message', 'Produto excluído com sucesso!', 'success');
+                carregarProdutos();
+                if (document.getElementById('produtos-disponiveis')) {
+                    carregarProdutosParaPedidos();
+                }
+            }
+        }
+
+        // ========== FUNCIONALIDADES DE PEDIDOS (NOVAS) ==========
+
+        // Carregar pedidos na tabela
+        function carregarPedidos() {
+            const tbody = document.getElementById('pedidos-tbody');
+            tbody.innerHTML = '';
+            
+            pedidos.forEach(pedido => {
+                // Encontrar cliente e vendedor
+                const cliente = clientes.find(c => c.id === pedido.clienteId);
+                const vendedor = funcionarios.find(f => f.id === pedido.vendedorId);
+                
+                let statusClass = 'status-pendente';
+                if (pedido.status === 'faturado') statusClass = 'status-faturado';
+                if (pedido.status === 'cancelado') statusClass = 'status-cancelado';
+                
+                const statusText = pedido.status === 'pendente' ? 'Pendente' : 
+                                 pedido.status === 'faturado' ? 'Faturado' : 'Cancelado';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${pedido.codigo}</td>
+                    <td>${cliente ? cliente.nome : 'Cliente não encontrado'}</td>
+                    <td>${pedido.data}</td>
+                    <td>${pedido.itens} itens</td>
+                    <td>R$ ${pedido.valorTotal.toFixed(2)}</td>
+                    <td><span class="status ${statusClass}">${statusText}</span></td>
+                    <td class="actions">
+                        <div class="action-btn view-btn" title="Visualizar" data-id="${pedido.id}">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Mostrar lista de pedidos (modo padrão)
+        function mostrarListaPedidos() {
+            document.getElementById('lista-pedidos').style.display = 'block';
+            document.getElementById('novo-pedido-container').classList.remove('active');
+            document.getElementById('page-title').textContent = 'Pedidos';
+            document.getElementById('page-description').textContent = 'Gerenciamento de pedidos de venda';
+        }
+
+        // Mostrar tela de novo pedido
+        function mostrarNovoPedido() {
+            document.getElementById('lista-pedidos').style.display = 'none';
+            document.getElementById('novo-pedido-container').classList.add('active');
+            document.getElementById('page-title').textContent = 'Novo Pedido';
+            document.getElementById('page-description').textContent = 'Criar novo pedido de venda';
+            
+            // Atualiza data atual
+            const hoje = new Date();
+            const dataFormatada = hoje.toLocaleDateString('pt-BR');
+            document.getElementById('pedido-data').textContent = dataFormatada;
+            
+            // Carrega dados
+            atualizarClientesParaPedidos();
+            atualizarFuncionariosParaPedidos();
+            carregarProdutosParaPedidos();
+            carregarCategoriasFiltro();
+            
+            // Limpa carrinho e desconto
+            carrinho = [];
+            desconto = 0;
+            atualizarCarrinho();
+            esconderRecomendacoes();
+            
+            // Limpa campos
+            document.getElementById('pedido-cliente').value = '';
+            document.getElementById('pedido-vendedor').value = '';
+            document.getElementById('pedido-status').value = 'pendente';
+            document.getElementById('busca-produto').value = '';
+            
+            // Reseta filtro de categoria
+            categoriaFiltro = 'todos';
+            document.querySelectorAll('.categoria-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.categoria-btn[data-categoria="todos"]').classList.add('active');
+        }
+
+        // Atualizar lista de clientes para pedidos
+        function atualizarClientesParaPedidos() {
+            const select = document.getElementById('pedido-cliente');
+            select.innerHTML = '<option value="">Selecione um cliente...</option>';
+            
+            clientes.filter(c => c.status === 'ativo').forEach(cliente => {
+                const option = document.createElement('option');
+                option.value = cliente.id;
+                option.textContent = `${cliente.nome} (${cliente.codigo})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Atualizar lista de funcionários para pedidos
+        function atualizarFuncionariosParaPedidos() {
+            const select = document.getElementById('pedido-vendedor');
+            select.innerHTML = '<option value="">Selecione um vendedor...</option>';
+            
+            funcionarios.filter(f => f.status === 'ativo' && f.cargo === 'Vendedor').forEach(funcionario => {
+                const option = document.createElement('option');
+                option.value = funcionario.id;
+                option.textContent = `${funcionario.nome} (${funcionario.codigo})`;
+                select.appendChild(option);
+            });
+        }
+
+        // Carregar produtos para pedidos
+        function carregarProdutosParaPedidos() {
+            const container = document.getElementById('produtos-disponiveis');
+            const busca = document.getElementById('busca-produto').value.toLowerCase();
+            
+            container.innerHTML = '';
+            
+            // Filtra produtos por categoria e busca
+            const produtosFiltrados = produtos.filter(produto => {
+                // Filtro de categoria
+                if (categoriaFiltro !== 'todos' && produto.categoria !== categoriaFiltro) {
+                    return false;
+                }
+                
+                // Filtro de busca
+                if (busca && !produto.nome.toLowerCase().includes(busca)) {
+                    return false;
+                }
+                
+                // Mostra apenas produtos ativos com estoque > 0
+                return produto.status === 'ativo' && produto.estoque > 0;
+            });
+            
+            if (produtosFiltrados.length === 0) {
+                container.innerHTML = '<div class="carrinho-vazio">Nenhum produto encontrado</div>';
+                return;
+            }
+            
+            produtosFiltrados.forEach(produto => {
+                const estoqueClass = produto.estoque <= produto.estoqueMin ? 'baixo' : '';
+                
+                const produtoCard = document.createElement('div');
+                produtoCard.className = 'produto-card';
+                produtoCard.dataset.id = produto.id;
+                produtoCard.innerHTML = `
+                    <div class="produto-nome">${produto.nome}</div>
+                    <div class="produto-preco">R$ ${produto.preco.toFixed(2)}</div>
+                    <div class="produto-info">
+                        ${produto.codigo}<br>
+                        Categoria: ${produto.categoria}
+                    </div>
+                    <div class="produto-estoque ${estoqueClass}">
+                        Estoque: ${produto.estoque} unidades
+                    </div>
+                `;
+                
+                produtoCard.addEventListener('click', () => adicionarAoCarrinho(produto.id));
+                container.appendChild(produtoCard);
+            });
+        }
+
+        // Carregar categorias para filtro
+        function carregarCategoriasFiltro() {
+            const container = document.getElementById('categorias-filtro');
+            container.innerHTML = '';
+            
+            // Extrai categorias únicas dos produtos
+            const categorias = ['todos', ...new Set(produtos.map(p => p.categoria))];
+            
+            categorias.forEach(categoria => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `categoria-btn ${categoria === 'todos' ? 'active' : ''}`;
+                btn.textContent = categoria === 'todos' ? 'Todos' : categoria;
+                btn.dataset.categoria = categoria;
+                
+                btn.addEventListener('click', () => {
+                    categoriaFiltro = categoria;
+                    document.querySelectorAll('.categoria-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    carregarProdutosParaPedidos();
+                });
+                
+                container.appendChild(btn);
+            });
+        }
+
+        // Adicionar produto ao carrinho
+        function adicionarAoCarrinho(produtoId) {
+            const produto = produtos.find(p => p.id === produtoId);
+            if (!produto || produto.estoque <= 0) return;
+            
+            // Verifica se o produto já está no carrinho
+            const itemIndex = carrinho.findIndex(item => item.id === produtoId);
+            
+            if (itemIndex !== -1) {
+                // Verifica se há estoque suficiente
+                if (carrinho[itemIndex].quantidade >= produto.estoque) {
+                    alert(`Estoque insuficiente! Disponível: ${produto.estoque} unidades.`);
+                    return;
+                }
+                // Aumenta quantidade
+                carrinho[itemIndex].quantidade += 1;
+            } else {
+                // Adiciona novo item
+                carrinho.push({
+                    id: produtoId,
+                    codigo: produto.codigo,
+                    nome: produto.nome,
+                    preco: produto.preco,
+                    quantidade: 1,
+                    estoqueDisponivel: produto.estoque
+                });
+            }
+            
+            atualizarCarrinho();
+            mostrarRecomendacoes(produtoId);
+        }
+
+        // Atualizar carrinho
+        function atualizarCarrinho() {
+            const container = document.getElementById('carrinho-itens');
+            const subtotalElement = document.getElementById('subtotal');
+            const descontoElement = document.getElementById('desconto');
+            const totalItensElement = document.getElementById('total-itens');
+            const totalPedidoElement = document.getElementById('total-pedido');
+            
+            // Limpa container
+            container.innerHTML = '';
+            
+            if (carrinho.length === 0) {
+                container.innerHTML = '<div class="carrinho-vazio">Nenhum produto no carrinho</div>';
+                subtotalElement.textContent = 'R$ 0,00';
+                descontoElement.textContent = 'R$ 0,00';
+                totalItensElement.textContent = '0';
+                totalPedidoElement.textContent = 'R$ 0,00';
+                return;
+            }
+            
+            // Calcula subtotal e total de itens
+            let subtotal = 0;
+            let totalItens = 0;
+            
+            // Adiciona itens ao carrinho
+            carrinho.forEach((item, index) => {
+                const itemTotal = item.preco * item.quantidade;
+                subtotal += itemTotal;
+                totalItens += item.quantidade;
+                
+                const carrinhoItem = document.createElement('div');
+                carrinhoItem.className = 'carrinho-item';
+                carrinhoItem.innerHTML = `
+                    <div class="item-info">
+                        <h4>${item.nome}</h4>
+                        <div class="item-detalhes">
+                            ${item.codigo} | R$ ${item.preco.toFixed(2)} un.
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-quantidade diminuir" data-index="${index}">-</button>
+                        <input type="number" class="item-quantidade" value="${item.quantidade}" min="1" 
+                               max="${item.estoqueDisponivel}" data-index="${index}">
+                        <button class="btn-quantidade aumentar" data-index="${index}">+</button>
+                        <button class="btn-quantidade btn-remover remover" data-index="${index}" title="Remover">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(carrinhoItem);
+            });
+            
+            // Calcula totais
+            const totalDesconto = desconto;
+            const total = subtotal - totalDesconto;
+            
+            // Atualiza totais na interface
+            subtotalElement.textContent = `R$ ${subtotal.toFixed(2)}`;
+            descontoElement.textContent = `R$ ${totalDesconto.toFixed(2)}`;
+            totalItensElement.textContent = totalItens;
+            totalPedidoElement.textContent = `R$ ${total.toFixed(2)}`;
+            
+            // Adiciona eventos aos controles
+            adicionarEventosCarrinho();
+        }
+
+        // Adicionar eventos aos controles do carrinho
+        function adicionarEventosCarrinho() {
+            // Botões de aumentar quantidade
+            document.querySelectorAll('.aumentar').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    const produto = produtos.find(p => p.id === carrinho[index].id);
+                    
+                    if (carrinho[index].quantidade < produto.estoque) {
+                        carrinho[index].quantidade += 1;
+                        atualizarCarrinho();
+                    } else {
+                        alert(`Estoque máximo atingido! Disponível: ${produto.estoque} unidades.`);
+                    }
+                });
+            });
+            
+            // Botões de diminuir quantidade
+            document.querySelectorAll('.diminuir').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    
+                    if (carrinho[index].quantidade > 1) {
+                        carrinho[index].quantidade -= 1;
+                        atualizarCarrinho();
+                    } else {
+                        // Remove item se quantidade for 1
+                        carrinho.splice(index, 1);
+                        atualizarCarrinho();
+                        esconderRecomendacoes();
+                    }
+                });
+            });
+            
+            // Inputs de quantidade
+            document.querySelectorAll('.item-quantidade').forEach(input => {
+                input.addEventListener('change', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    const novaQuantidade = parseInt(this.value);
+                    const produto = produtos.find(p => p.id === carrinho[index].id);
+                    
+                    if (novaQuantidade >= 1 && novaQuantidade <= produto.estoque) {
+                        carrinho[index].quantidade = novaQuantidade;
+                        atualizarCarrinho();
+                    } else if (novaQuantidade > produto.estoque) {
+                        alert(`Estoque insuficiente! Disponível: ${produto.estoque} unidades.`);
+                        this.value = carrinho[index].quantidade;
+                    } else if (novaQuantidade < 1) {
+                        carrinho.splice(index, 1);
+                        atualizarCarrinho();
+                        esconderRecomendacoes();
+                    }
+                });
+            });
+            
+            // Botões de remover
+            document.querySelectorAll('.remover').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    carrinho.splice(index, 1);
+                    atualizarCarrinho();
+                    esconderRecomendacoes();
+                });
+            });
+        }
+
+        // Mostrar recomendações
+        function mostrarRecomendacoes(produtoId) {
+            const recomendacoes = produtosRecomendados[produtoId];
+            if (!recomendacoes || recomendacoes.length === 0) {
+                esconderRecomendacoes();
+                return;
+            }
+            
+            const container = document.getElementById('recomendacoes-container');
+            const grid = document.getElementById('produtos-recomendados');
+            
+            grid.innerHTML = '';
+            
+            recomendacoes.forEach(produtoRecId => {
+                const produto = produtos.find(p => p.id === produtoRecId);
+                if (!produto || produto.status !== 'ativo' || produto.estoque <= 0) return;
+                
+                // Verifica se já está no carrinho
+                const jaNoCarrinho = carrinho.some(item => item.id === produto.id);
+                if (jaNoCarrinho) return;
+                
+                const item = document.createElement('div');
+                item.className = 'recomendacao-item';
+                item.innerHTML = `${produto.nome} - R$ ${produto.preco.toFixed(2)}`;
+                item.title = `Adicionar ${produto.nome} ao carrinho`;
+                
+                item.addEventListener('click', () => adicionarAoCarrinho(produto.id));
+                grid.appendChild(item);
+            });
+            
+            // Mostra apenas se houver recomendações
+            if (grid.children.length > 0) {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        // Esconder recomendações
+        function esconderRecomendacoes() {
+            document.getElementById('recomendacoes-container').style.display = 'none';
+        }
+
+        // ========== EVENTOS DO NOVO PEDIDO ==========
+
+        // Botão Novo Pedido
+        document.getElementById('novo-pedido-btn').addEventListener('click', function() {
+            mostrarNovoPedido();
+        });
+
+        // Botão Cancelar Pedido
+        document.getElementById('cancelar-pedido').addEventListener('click', function() {
+            if (carrinho.length > 0) {
+                if (!confirm('Deseja cancelar este pedido? Todos os itens do carrinho serão perdidos.')) {
+                    return;
+                }
+            }
+            mostrarListaPedidos();
+        });
+
+        // Botão Finalizar Pedido
+        document.getElementById('finalizar-pedido').addEventListener('click', function() {
+            const clienteId = document.getElementById('pedido-cliente').value;
+            const vendedorId = document.getElementById('pedido-vendedor').value;
+            const status = document.getElementById('pedido-status').value;
+            
+            // Validações
+            if (!clienteId) {
+                alert('Selecione um cliente para continuar.');
+                return;
+            }
+            
+            if (!vendedorId) {
+                alert('Selecione um vendedor para continuar.');
+                return;
+            }
+            
+            if (carrinho.length === 0) {
+                alert('Adicione produtos ao carrinho antes de finalizar o pedido.');
+                return;
+            }
+            
+            // Valida estoque dos produtos
+            for (const item of carrinho) {
+                const produto = produtos.find(p => p.id === item.id);
+                if (!produto || item.quantidade > produto.estoque) {
+                    alert(`Estoque insuficiente para ${produto.nome}. Disponível: ${produto.estoque}`);
+                    return;
+                }
+            }
+            
+            // Calcula valor total
+            const subtotal = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+            const valorTotal = subtotal - desconto;
+            
+            // Cria novo pedido
+            const novoId = pedidos.length > 0 ? Math.max(...pedidos.map(p => p.id)) + 1 : 1;
+            const codigo = `#PED-${(1000 + novoId).toString()}`;
+            const data = new Date().toLocaleDateString('pt-BR');
+            const itens = carrinho.reduce((sum, item) => sum + item.quantidade, 0);
+            
+            const novoPedido = {
+                id: novoId,
+                codigo,
+                clienteId: parseInt(clienteId),
+                vendedorId: parseInt(vendedorId),
+                data,
+                itens,
+                valorTotal,
+                status
+            };
+            
+            // Adiciona pedido à lista
+            pedidos.push(novoPedido);
+            
+            // Atualiza estoque dos produtos
+            carrinho.forEach(item => {
+                const produtoIndex = produtos.findIndex(p => p.id === item.id);
+                if (produtoIndex !== -1) {
+                    produtos[produtoIndex].estoque -= item.quantidade;
+                }
+            });
+            
+            // Mensagem de sucesso
+            showMessage('pedido-message', `Pedido ${codigo} criado com sucesso!`, 'success');
+            
+            // Volta para lista de pedidos após 2 segundos
+            setTimeout(() => {
+                mostrarListaPedidos();
+                carregarPedidos();
+                carregarProdutos(); // Atualiza estoque na lista de produtos
+            }, 2000);
+        });
+
+        // Busca de produtos
+        document.getElementById('busca-produto').addEventListener('input', function() {
+            carregarProdutosParaPedidos();
+        });
+
+        // Botão Aplicar Desconto
+        document.getElementById('aplicar-desconto-btn').addEventListener('click', function() {
+            document.getElementById('desconto-modal').style.display = 'flex';
+        });
+
+        // Botão Limpar Carrinho
+        document.getElementById('limpar-carrinho-btn').addEventListener('click', function() {
+            if (carrinho.length > 0 && confirm('Deseja limpar todo o carrinho?')) {
+                carrinho = [];
+                desconto = 0;
+                atualizarCarrinho();
+                esconderRecomendacoes();
+            }
+        });
+
+        // ========== MODAL DE DESCONTO ==========
+
+        // Fechar modal
+        document.getElementById('close-desconto-modal').addEventListener('click', function() {
+            document.getElementById('desconto-modal').style.display = 'none';
+        });
+
+        document.getElementById('cancelar-desconto-modal').addEventListener('click', function() {
+            document.getElementById('desconto-modal').style.display = 'none';
+        });
+
+        // Aplicar desconto
+        document.getElementById('aplicar-desconto-modal-btn').addEventListener('click', function() {
+            const tipo = document.getElementById('tipo-desconto').value;
+            const valorInput = document.getElementById('valor-desconto').value;
+            const valor = parseFloat(valorInput);
+            
+            if (!valorInput || isNaN(valor) || valor < 0) {
+                alert('Digite um valor válido para o desconto.');
+                return;
+            }
+            
+            // Calcula subtotal atual
+            const subtotal = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+            
+            if (tipo === 'percentual') {
+                // Valida percentual (0-100%)
+                if (valor < 0 || valor > 100) {
+                    alert('O desconto percentual deve estar entre 0% e 100%.');
+                    return;
+                }
+                desconto = subtotal * (valor / 100);
+            } else {
+                // Valida valor fixo (não pode ser maior que subtotal)
+                if (valor > subtotal) {
+                    alert('O desconto não pode ser maior que o subtotal.');
+                    return;
+                }
+                desconto = valor;
+            }
+            
+            // Limpa campo e fecha modal
+            document.getElementById('valor-desconto').value = '';
+            document.getElementById('desconto-modal').style.display = 'none';
+            
+            // Atualiza carrinho
+            atualizarCarrinho();
+        });
+
+        // Fechar modal ao clicar fora
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('desconto-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // ========== FUNÇÕES AUXILIARES ==========
+
+        // Mostrar mensagem
+        function showMessage(elementId, message, type = 'success') {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `message message-${type}`;
+            element.style.display = 'block';
+            
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 3000);
+        }
+
+        // Atualização dinâmica da interface
+        function updateDateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // ========== INICIALIZAÇÃO ==========
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carrega dados iniciais
+            carregarClientes();
+            carregarFuncionarios();
+            carregarProdutos();
+            carregarPedidos();
+            
+            // Atualizar a cada minuto
+            setInterval(updateDateTime, 60000);
+            updateDateTime();
+        });
+
+    </script>
+</body>
+</html>
