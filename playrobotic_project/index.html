@@ -6,7 +6,7 @@
     <title>Playrobotic - Sistema de Ponto de Vendas</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Todos os estilos anteriores mantidos... */
+        /* Todos os estilos CSS anteriores mantidos */
         * {
             margin: 0;
             padding: 0;
@@ -406,7 +406,7 @@
             font-style: italic;
         }
 
-        /* Tela de Novo Pedido - NOVO ESTILO */
+        /* Tela de Novo Pedido */
         .novo-pedido-container {
             background-color: white;
             border-radius: 10px;
@@ -914,6 +914,27 @@
         .stars {
             color: #f39c12;
         }
+
+        /* Loading spinner */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--secondary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
@@ -983,7 +1004,7 @@
 
             <!-- Dashboard -->
             <section id="dashboard" class="page-content active">
-                <!-- Conteúdo do dashboard (mantido igual)... -->
+                <!-- Conteúdo do dashboard -->
                 <div class="cards-container">
                     <div class="card">
                         <div class="card-header">
@@ -994,7 +1015,7 @@
                                 <i class="fas fa-arrow-up"></i> 12%
                             </div>
                         </div>
-                        <div class="card-value">1,254</div>
+                        <div class="card-value" id="total-clientes">0</div>
                         <div class="card-label">Clientes Cadastrados</div>
                     </div>
                     <div class="card">
@@ -1006,7 +1027,7 @@
                                 <i class="fas fa-arrow-up"></i> 5%
                             </div>
                         </div>
-                        <div class="card-value">348</div>
+                        <div class="card-value" id="total-produtos">0</div>
                         <div class="card-label">Produtos em Estoque</div>
                     </div>
                     <div class="card">
@@ -1018,7 +1039,7 @@
                                 <i class="fas fa-arrow-up"></i> 23%
                             </div>
                         </div>
-                        <div class="card-value">R$ 48,560</div>
+                        <div class="card-value" id="total-vendas">R$ 0,00</div>
                         <div class="card-label">Vendas do Mês</div>
                     </div>
                     <div class="card">
@@ -1030,7 +1051,7 @@
                                 <i class="fas fa-minus"></i> 0%
                             </div>
                         </div>
-                        <div class="card-value">15</div>
+                        <div class="card-value" id="total-funcionarios">0</div>
                         <div class="card-label">Funcionários Ativos</div>
                     </div>
                 </div>
@@ -1057,48 +1078,17 @@
                         <h2 class="table-title">Pedidos Recentes</h2>
                         <button class="btn btn-primary">Ver Todos</button>
                     </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID Pedido</th>
-                                <th>Cliente</th>
-                                <th>Data</th>
-                                <th>Valor Total</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>#PED-1001</td>
-                                <td>João Silva</td>
-                                <td>15/03/2025</td>
-                                <td>R$ 1,250.00</td>
-                                <td><span class="status status-faturado">Faturado</span></td>
-                                <td class="actions">
-                                    <div class="action-btn view-btn" title="Visualizar">
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>#PED-1002</td>
-                                <td>Maria Oliveira</td>
-                                <td>14/03/2025</td>
-                                <td>R$ 890.50</td>
-                                <td><span class="status status-pendente">Pendente</span></td>
-                                <td class="actions">
-                                    <div class="action-btn view-btn" title="Visualizar">
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div id="recent-orders-table">
+                        <!-- Tabela será carregada dinamicamente via AJAX -->
+                        <div class="loading">
+                            <div class="loader"></div>
+                            <p>Carregando pedidos...</p>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            <!-- Clientes (mantido igual)... -->
+            <!-- Clientes -->
             <section id="clientes" class="page-content">
                 <div class="message message-success" id="cliente-message" style="display: none;"></div>
                 
@@ -1109,22 +1099,13 @@
                             <button class="btn btn-primary" id="add-cliente">Adicionar Cliente</button>
                         </div>
                     </div>
-                    <table id="clientes-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Telefone</th>
-                                <th>Data Cadastro</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="clientes-tbody">
-                            <!-- Clientes serão carregados dinamicamente -->
-                        </tbody>
-                    </table>
+                    <div id="clientes-table-container">
+                        <!-- Tabela será carregada dinamicamente via AJAX -->
+                        <div class="loading">
+                            <div class="loader"></div>
+                            <p>Carregando clientes...</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Formulário Cliente -->
@@ -1182,7 +1163,7 @@
                 </div>
             </section>
 
-            <!-- Funcionários (mantido igual)... -->
+            <!-- Funcionários -->
             <section id="funcionarios" class="page-content">
                 <div class="message message-success" id="funcionario-message" style="display: none;"></div>
                 
@@ -1193,23 +1174,13 @@
                             <button class="btn btn-primary" id="add-funcionario">Adicionar Funcionário</button>
                         </div>
                     </div>
-                    <table id="funcionarios-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>Cargo</th>
-                                <th>Tipo Contrato</th>
-                                <th>Salário Base</th>
-                                <th>Comissão</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="funcionarios-tbody">
-                            <!-- Funcionários serão carregados dinamicamente -->
-                        </tbody>
-                    </table>
+                    <div id="funcionarios-table-container">
+                        <!-- Tabela será carregada dinamicamente via AJAX -->
+                        <div class="loading">
+                            <div class="loader"></div>
+                            <p>Carregando funcionários...</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Formulário Funcionário -->
@@ -1272,7 +1243,7 @@
                 </div>
             </section>
 
-            <!-- Produtos (mantido igual)... -->
+            <!-- Produtos -->
             <section id="produtos" class="page-content">
                 <div class="message message-success" id="produto-message" style="display: none;"></div>
                 
@@ -1283,22 +1254,13 @@
                             <button class="btn btn-primary" id="add-produto">Adicionar Produto</button>
                         </div>
                     </div>
-                    <table id="produtos-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>Categoria</th>
-                                <th>Preço</th>
-                                <th>Estoque</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="produtos-tbody">
-                            <!-- Produtos serão carregados dinamicamente -->
-                        </tbody>
-                    </table>
+                    <div id="produtos-table-container">
+                        <!-- Tabela será carregada dinamicamente via AJAX -->
+                        <div class="loading">
+                            <div class="loader"></div>
+                            <p>Carregando produtos...</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Formulário Produto -->
@@ -1361,9 +1323,8 @@
                 </div>
             </section>
 
-            <!-- Pedidos - COM FUNCIONALIDADE COMPLETA DE NOVO PEDIDO -->
+            <!-- Pedidos -->
             <section id="pedidos" class="page-content">
-                <!-- Mensagem de sucesso -->
                 <div class="message message-success" id="pedido-message" style="display: none;"></div>
                 
                 <!-- Lista de Pedidos (modo padrão) -->
@@ -1376,22 +1337,13 @@
                             </button>
                         </div>
                     </div>
-                    <table id="pedidos-table">
-                        <thead>
-                            <tr>
-                                <th>ID Pedido</th>
-                                <th>Cliente</th>
-                                <th>Data</th>
-                                <th>Itens</th>
-                                <th>Valor Total</th>
-                                <th>Status</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="pedidos-tbody">
-                            <!-- Pedidos serão carregados dinamicamente -->
-                        </tbody>
-                    </table>
+                    <div id="pedidos-table-container">
+                        <!-- Tabela será carregada dinamicamente via AJAX -->
+                        <div class="loading">
+                            <div class="loader"></div>
+                            <p>Carregando pedidos...</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Tela de Novo Pedido (inicialmente oculta) -->
@@ -1426,7 +1378,7 @@
                         </div>
                         <div class="info-group">
                             <label class="info-label">Data do Pedido</label>
-                            <div class="info-value" id="pedido-data">16/03/2025</div>
+                            <div class="info-value" id="pedido-data">Carregando...</div>
                         </div>
                         <div class="info-group">
                             <label class="info-label" for="pedido-status">Status</label>
@@ -1511,7 +1463,7 @@
                 </div>
             </section>
 
-            <!-- Relatórios (mantido igual)... -->
+            <!-- Relatórios -->
             <section id="relatorios" class="page-content">
                 <div class="cards-container">
                     <div class="card">
@@ -1602,51 +1554,8 @@
     </div>
 
     <script>
-        // ========== DADOS DO SISTEMA ==========
-        
-        // Dados dos clientes (mantido da implementação anterior)
-        let clientes = [
-            { id: 1, codigo: "#CLI-001", nome: "João Silva", email: "joao.silva@email.com", telefone: "(81) 99999-9999", cpf: "123.456.789-00", endereco: "Rua A, 123", cidade: "Recife", estado: "PE", status: "ativo", dataCadastro: "15/02/2024", totalCompras: 5250.00 },
-            { id: 2, codigo: "#CLI-002", nome: "Maria Oliveira", email: "maria.oliveira@email.com", telefone: "(81) 98888-8888", cpf: "987.654.321-00", endereco: "Av. B, 456", cidade: "Recife", estado: "PE", status: "ativo", dataCadastro: "20/03/2024", totalCompras: 3890.50 }
-        ];
-
-        // Dados dos funcionários (mantido da implementação anterior)
-        let funcionarios = [
-            { id: 1, codigo: "#FUNC-001", nome: "José Almeida", cargo: "Vendedor", contrato: "Comissionado", salario: 1500.00, comissao: 5, email: "jose.almeida@playrobotic.com", telefone: "(81) 96666-6666", status: "ativo" },
-            { id: 2, codigo: "#FUNC-002", nome: "Fernanda Lima", cargo: "Gerente", contrato: "Fixo", salario: 4500.00, comissao: 0, email: "fernanda.lima@playrobotic.com", telefone: "(81) 95555-5555", status: "ativo" }
-        ];
-
-        // Dados dos produtos (expandido para o sistema de pedidos)
-        let produtos = [
-            { id: 1, codigo: "#PROD-001", nome: "Smartphone XYZ", categoria: "Celulares", descricao: "Smartphone com tela 6.5\", 128GB", preco: 1899.00, custo: 1200.00, estoque: 25, estoqueMin: 5, status: "ativo", visualizacoes: 1245, avaliacao: 4.2 },
-            { id: 2, codigo: "#PROD-002", nome: "Notebook ABC", categoria: "Computadores", descricao: "Notebook i7, 16GB RAM, 512GB SSD", preco: 3499.00, custo: 2500.00, estoque: 12, estoqueMin: 3, status: "ativo", visualizacoes: 890, avaliacao: 5.0 },
-            { id: 3, codigo: "#PROD-003", nome: "Fone Bluetooth", categoria: "Acessórios", descricao: "Fone de ouvido sem fio com cancelamento de ruído", preco: 199.00, custo: 120.00, estoque: 78, estoqueMin: 10, status: "ativo", visualizacoes: 2345, avaliacao: 3.4 },
-            { id: 4, codigo: "#PROD-004", nome: "Tablet 10\"", categoria: "Tablets", descricao: "Tablet com tela 10 polegadas, 64GB", preco: 1299.00, custo: 800.00, estoque: 8, estoqueMin: 2, status: "ativo", visualizacoes: 567, avaliacao: 4.5 },
-            { id: 5, codigo: "#PROD-005", nome: "Smartwatch Pro", categoria: "Wearables", descricao: "Relógio inteligente com monitor cardíaco", preco: 899.00, custo: 550.00, estoque: 15, estoqueMin: 5, status: "ativo", visualizacoes: 987, avaliacao: 4.0 },
-            { id: 6, codigo: "#PROD-006", nome: "Monitor 24\"", categoria: "Computadores", descricao: "Monitor Full HD 24 polegadas", preco: 799.00, custo: 500.00, estoque: 20, estoqueMin: 5, status: "ativo", visualizacoes: 654, avaliacao: 4.3 },
-            { id: 7, codigo: "#PROD-007", nome: "Teclado Mecânico", categoria: "Acessórios", descricao: "Teclado mecânico RGB", preco: 299.00, custo: 180.00, estoque: 35, estoqueMin: 10, status: "ativo", visualizacoes: 432, avaliacao: 4.1 },
-            { id: 8, codigo: "#PROD-008", nome: "Mouse Sem Fio", categoria: "Acessórios", descricao: "Mouse óptico sem fio", preco: 89.90, custo: 50.00, estoque: 45, estoqueMin: 15, status: "ativo", visualizacoes: 321, avaliacao: 4.2 },
-            { id: 9, codigo: "#PROD-009", nome: "Carregador Rápido", categoria: "Acessórios", descricao: "Carregador rápido 30W", preco: 129.90, custo: 70.00, estoque: 30, estoqueMin: 10, status: "ativo", visualizacoes: 567, avaliacao: 4.5 }
-        ];
-
-        // Dados de pedidos existentes
-        let pedidos = [
-            { id: 1, codigo: "#PED-1001", clienteId: 1, vendedorId: 1, data: "15/03/2025", itens: 3, valorTotal: 1250.00, status: "faturado" },
-            { id: 2, codigo: "#PED-1002", clienteId: 2, vendedorId: 1, data: "14/03/2025", itens: 2, valorTotal: 890.50, status: "pendente" }
-        ];
-
-        // Dados de produtos recomendados (associação de produtos)
-        const produtosRecomendados = {
-            1: [3, 9], // Smartphone XYZ -> Fone Bluetooth, Carregador Rápido
-            2: [6, 7], // Notebook ABC -> Monitor 24", Teclado Mecânico
-            3: [9],    // Fone Bluetooth -> Carregador Rápido
-            4: [3, 8], // Tablet 10" -> Fone Bluetooth, Mouse Sem Fio
-            5: [3, 9], // Smartwatch Pro -> Fone Bluetooth, Carregador Rápido
-            6: [2, 7], // Monitor 24" -> Notebook ABC, Teclado Mecânico
-            7: [2, 6], // Teclado Mecânico -> Notebook ABC, Monitor 24"
-            8: [2, 4], // Mouse Sem Fio -> Notebook ABC, Tablet 10"
-            9: [1, 3]  // Carregador Rápido -> Smartphone XYZ, Fone Bluetooth
-        };
+        // ========== CONFIGURAÇÕES DO SISTEMA ==========
+        const API_BASE_URL = 'api.php'; // Arquivo PHP que servirá como API
 
         // ========== VARIÁVEIS DO NOVO PEDIDO ==========
         let carrinho = [];
@@ -1655,7 +1564,7 @@
 
         // ========== FUNCIONALIDADES GERAIS ==========
 
-        // Navegação entre páginas (mantida da implementação anterior)
+        // Navegação entre páginas
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -1681,6 +1590,7 @@
                 }
                 
                 // Carrega dados ao acessar cada página
+                if (pageId === 'dashboard') carregarDashboard();
                 if (pageId === 'clientes') carregarClientes();
                 if (pageId === 'funcionarios') carregarFuncionarios();
                 if (pageId === 'produtos') carregarProdutos();
@@ -1707,42 +1617,197 @@
             }
         }
 
-        // ========== FUNCIONALIDADES DE CLIENTES (MANTIDAS) ==========
+        // ========== FUNÇÕES AUXILIARES AJAX ==========
 
-        // Carregar clientes na tabela
-        function carregarClientes() {
-            const tbody = document.getElementById('clientes-tbody');
-            tbody.innerHTML = '';
-            
-            clientes.forEach(cliente => {
-                const statusClass = cliente.status === 'ativo' ? 'badge-success' : 'badge-danger';
-                const statusText = cliente.status === 'ativo' ? 'Ativo' : 'Inativo';
+        async function fetchData(endpoint, method = 'GET', data = null) {
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                };
+
+                if (data && (method === 'POST' || method === 'PUT')) {
+                    options.body = JSON.stringify(data);
+                }
+
+                const response = await fetch(`${API_BASE_URL}?action=${endpoint}`, options);
                 
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${cliente.codigo}</td>
-                    <td>${cliente.nome}</td>
-                    <td>${cliente.email}</td>
-                    <td>${cliente.telefone}</td>
-                    <td>${cliente.dataCadastro}</td>
-                    <td><span class="badge ${statusClass}">${statusText}</span></td>
-                    <td class="actions">
-                        <div class="action-btn edit-btn" title="Editar" data-id="${cliente.id}">
-                            <i class="fas fa-edit"></i>
-                        </div>
-                        <div class="action-btn delete-btn" title="Excluir" data-id="${cliente.id}">
-                            <i class="fas fa-trash"></i>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            // Adiciona eventos aos botões
-            adicionarEventosClientes();
+                if (!response.ok) {
+                    throw new Error(`Erro na requisição: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(result.message || 'Erro desconhecido');
+                }
+                
+                return result;
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                showMessage('error-message', `Erro: ${error.message}`, 'error');
+                throw error;
+            }
         }
 
-        // Adicionar eventos aos botões de clientes (mantido da implementação anterior)
+        // Mostrar mensagem
+        function showMessage(elementId, message, type = 'success') {
+            let element = document.getElementById(elementId);
+            if (!element) {
+                // Cria elemento de mensagem se não existir
+                element = document.createElement('div');
+                element.id = elementId;
+                element.className = `message message-${type}`;
+                element.style.display = 'none';
+                document.querySelector('.main-content').prepend(element);
+            }
+            
+            element.textContent = message;
+            element.className = `message message-${type}`;
+            element.style.display = 'block';
+            
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 3000);
+        }
+
+        // ========== FUNCIONALIDADES DO DASHBOARD ==========
+
+        async function carregarDashboard() {
+            try {
+                const data = await fetchData('dashboard');
+                
+                // Atualiza cards do dashboard
+                if (data.data) {
+                    document.getElementById('total-clientes').textContent = data.data.totalClientes || 0;
+                    document.getElementById('total-produtos').textContent = data.data.totalProdutos || 0;
+                    document.getElementById('total-funcionarios').textContent = data.data.totalFuncionarios || 0;
+                    document.getElementById('total-vendas').textContent = `R$ ${(data.data.totalVendas || 0).toFixed(2)}`;
+                }
+                
+                // Carrega pedidos recentes
+                carregarPedidosRecentes();
+            } catch (error) {
+                console.error('Erro ao carregar dashboard:', error);
+            }
+        }
+
+        async function carregarPedidosRecentes() {
+            try {
+                const data = await fetchData('pedidos_recentes');
+                const container = document.getElementById('recent-orders-table');
+                
+                if (!data.data || data.data.length === 0) {
+                    container.innerHTML = '<p>Nenhum pedido recente encontrado.</p>';
+                    return;
+                }
+                
+                let html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Pedido</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Valor Total</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                
+                data.data.forEach(pedido => {
+                    let statusClass = 'status-pendente';
+                    if (pedido.status === 'faturado') statusClass = 'status-faturado';
+                    if (pedido.status === 'cancelado') statusClass = 'status-cancelado';
+                    
+                    const statusText = pedido.status === 'pendente' ? 'Pendente' : 
+                                     pedido.status === 'faturado' ? 'Faturado' : 'Cancelado';
+                    
+                    html += `
+                        <tr>
+                            <td>${pedido.codigo}</td>
+                            <td>${pedido.nome_cliente}</td>
+                            <td>${pedido.data}</td>
+                            <td>R$ ${parseFloat(pedido.valor_total).toFixed(2)}</td>
+                            <td><span class="status ${statusClass}">${statusText}</span></td>
+                            <td class="actions">
+                                <div class="action-btn view-btn" title="Visualizar" data-id="${pedido.id}">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                            </td>
+                        </tr>`;
+                });
+                
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Erro ao carregar pedidos recentes:', error);
+            }
+        }
+
+        // ========== FUNCIONALIDADES DE CLIENTES ==========
+
+        async function carregarClientes() {
+            try {
+                const data = await fetchData('clientes_listar');
+                const container = document.getElementById('clientes-table-container');
+                
+                if (!data.data || data.data.length === 0) {
+                    container.innerHTML = '<p>Nenhum cliente cadastrado.</p>';
+                    return;
+                }
+                
+                let html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Data Cadastro</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                
+                data.data.forEach(cliente => {
+                    const statusClass = cliente.status === 'ativo' ? 'badge-success' : 'badge-danger';
+                    const statusText = cliente.status === 'ativo' ? 'Ativo' : 'Inativo';
+                    
+                    html += `
+                        <tr>
+                            <td>${cliente.codigo}</td>
+                            <td>${cliente.nome}</td>
+                            <td>${cliente.email}</td>
+                            <td>${cliente.telefone}</td>
+                            <td>${cliente.data_cadastro}</td>
+                            <td><span class="badge ${statusClass}">${statusText}</span></td>
+                            <td class="actions">
+                                <div class="action-btn edit-btn" title="Editar" data-id="${cliente.id}">
+                                    <i class="fas fa-edit"></i>
+                                </div>
+                                <div class="action-btn delete-btn" title="Excluir" data-id="${cliente.id}">
+                                    <i class="fas fa-trash"></i>
+                                </div>
+                            </td>
+                        </tr>`;
+                });
+                
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+                
+                // Adiciona eventos aos botões
+                adicionarEventosClientes();
+            } catch (error) {
+                console.error('Erro ao carregar clientes:', error);
+            }
+        }
+
         function adicionarEventosClientes() {
             // Botão adicionar cliente
             document.getElementById('add-cliente').addEventListener('click', function() {
@@ -1761,159 +1826,172 @@
             });
 
             // Formulário cliente
-            document.getElementById('cliente-form').addEventListener('submit', function(e) {
+            document.getElementById('cliente-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
-                salvarCliente();
+                await salvarCliente();
             });
 
-            // Botões editar cliente
-            document.querySelectorAll('#clientes-tbody .edit-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const clienteId = parseInt(this.getAttribute('data-id'));
-                    editarCliente(clienteId);
-                });
-            });
-
-            // Botões excluir cliente
-            document.querySelectorAll('#clientes-tbody .delete-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const clienteId = parseInt(this.getAttribute('data-id'));
-                    excluirCliente(clienteId);
-                });
+            // Botões editar cliente (delegado)
+            document.getElementById('clientes-table-container').addEventListener('click', async function(e) {
+                const editBtn = e.target.closest('.edit-btn');
+                if (editBtn) {
+                    const clienteId = parseInt(editBtn.getAttribute('data-id'));
+                    await editarCliente(clienteId);
+                }
+                
+                const deleteBtn = e.target.closest('.delete-btn');
+                if (deleteBtn) {
+                    const clienteId = parseInt(deleteBtn.getAttribute('data-id'));
+                    await excluirCliente(clienteId);
+                }
             });
         }
 
-        // Editar cliente (mantido da implementação anterior)
-        function editarCliente(id) {
-            const cliente = clientes.find(c => c.id === id);
-            if (!cliente) return;
-            
-            document.getElementById('cliente-form-container').style.display = 'block';
-            document.getElementById('cliente-form-title').textContent = 'Editar Cliente';
-            document.getElementById('cliente-id').value = cliente.id;
-            document.getElementById('cliente-nome').value = cliente.nome;
-            document.getElementById('cliente-email').value = cliente.email;
-            document.getElementById('cliente-telefone').value = cliente.telefone;
-            document.getElementById('cliente-cpf').value = cliente.cpf;
-            document.getElementById('cliente-endereco').value = cliente.endereco;
-            document.getElementById('cliente-cidade').value = cliente.cidade;
-            document.getElementById('cliente-estado').value = cliente.estado;
-            document.getElementById('cliente-status').value = cliente.status;
-            document.getElementById('cliente-submit-btn').textContent = 'Atualizar Cliente';
-            document.getElementById('cliente-form-container').scrollIntoView({ behavior: 'smooth' });
+        async function editarCliente(id) {
+            try {
+                const data = await fetchData('cliente_obter', 'POST', { id });
+                
+                if (!data.data) {
+                    showMessage('cliente-message', 'Cliente não encontrado', 'error');
+                    return;
+                }
+                
+                const cliente = data.data;
+                document.getElementById('cliente-form-container').style.display = 'block';
+                document.getElementById('cliente-form-title').textContent = 'Editar Cliente';
+                document.getElementById('cliente-id').value = cliente.id;
+                document.getElementById('cliente-nome').value = cliente.nome;
+                document.getElementById('cliente-email').value = cliente.email;
+                document.getElementById('cliente-telefone').value = cliente.telefone;
+                document.getElementById('cliente-cpf').value = cliente.cpf;
+                document.getElementById('cliente-endereco').value = cliente.endereco;
+                document.getElementById('cliente-cidade').value = cliente.cidade;
+                document.getElementById('cliente-estado').value = cliente.estado;
+                document.getElementById('cliente-status').value = cliente.status;
+                document.getElementById('cliente-submit-btn').textContent = 'Atualizar Cliente';
+                document.getElementById('cliente-form-container').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                showMessage('cliente-message', 'Erro ao carregar cliente', 'error');
+            }
         }
 
-        // Salvar cliente (mantido da implementação anterior)
-        function salvarCliente() {
-            const id = document.getElementById('cliente-id').value;
-            const nome = document.getElementById('cliente-nome').value;
-            const email = document.getElementById('cliente-email').value;
-            const telefone = document.getElementById('cliente-telefone').value;
-            const cpf = document.getElementById('cliente-cpf').value;
-            const endereco = document.getElementById('cliente-endereco').value;
-            const cidade = document.getElementById('cliente-cidade').value;
-            const estado = document.getElementById('cliente-estado').value;
-            const status = document.getElementById('cliente-status').value;
-            
-            if (id) {
-                // Atualizar cliente existente
-                const index = clientes.findIndex(c => c.id === parseInt(id));
-                if (index !== -1) {
-                    clientes[index] = {
-                        ...clientes[index],
-                        nome, email, telefone, cpf, endereco, cidade, estado, status
-                    };
+        async function salvarCliente() {
+            try {
+                const id = document.getElementById('cliente-id').value;
+                const clienteData = {
+                    nome: document.getElementById('cliente-nome').value,
+                    email: document.getElementById('cliente-email').value,
+                    telefone: document.getElementById('cliente-telefone').value,
+                    cpf: document.getElementById('cliente-cpf').value,
+                    endereco: document.getElementById('cliente-endereco').value,
+                    cidade: document.getElementById('cliente-cidade').value,
+                    estado: document.getElementById('cliente-estado').value,
+                    status: document.getElementById('cliente-status').value
+                };
+                
+                let result;
+                if (id) {
+                    // Atualizar cliente existente
+                    clienteData.id = id;
+                    result = await fetchData('cliente_atualizar', 'PUT', clienteData);
                     showMessage('cliente-message', 'Cliente atualizado com sucesso!', 'success');
+                } else {
+                    // Adicionar novo cliente
+                    result = await fetchData('cliente_criar', 'POST', clienteData);
+                    showMessage('cliente-message', 'Cliente adicionado com sucesso!', 'success');
                 }
-            } else {
-                // Adicionar novo cliente
-                const novoId = clientes.length > 0 ? Math.max(...clientes.map(c => c.id)) + 1 : 1;
-                const dataCadastro = new Date().toLocaleDateString('pt-BR');
-                const codigo = `#CLI-${novoId.toString().padStart(3, '0')}`;
                 
-                clientes.push({
-                    id: novoId,
-                    codigo,
-                    nome,
-                    email,
-                    telefone,
-                    cpf,
-                    endereco,
-                    cidade,
-                    estado,
-                    status,
-                    dataCadastro,
-                    totalCompras: 0
+                document.getElementById('cliente-form-container').style.display = 'none';
+                await carregarClientes();
+                await atualizarClientesParaPedidos();
+            } catch (error) {
+                showMessage('cliente-message', 'Erro ao salvar cliente', 'error');
+            }
+        }
+
+        async function excluirCliente(id) {
+            if (!confirm('Tem certeza que deseja excluir este cliente?')) return;
+            
+            try {
+                await fetchData('cliente_excluir', 'DELETE', { id });
+                showMessage('cliente-message', 'Cliente excluído com sucesso!', 'success');
+                await carregarClientes();
+                await atualizarClientesParaPedidos();
+            } catch (error) {
+                showMessage('cliente-message', 'Erro ao excluir cliente', 'error');
+            }
+        }
+
+        // ========== FUNCIONALIDADES DE FUNCIONÁRIOS ==========
+
+        async function carregarFuncionarios() {
+            try {
+                const data = await fetchData('funcionarios_listar');
+                const container = document.getElementById('funcionarios-table-container');
+                
+                if (!data.data || data.data.length === 0) {
+                    container.innerHTML = '<p>Nenhum funcionário cadastrado.</p>';
+                    return;
+                }
+                
+                let html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Cargo</th>
+                                <th>Tipo Contrato</th>
+                                <th>Salário Base</th>
+                                <th>Comissão</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                
+                data.data.forEach(funcionario => {
+                    let statusClass = 'badge-success';
+                    let statusText = 'Ativo';
+                    
+                    if (funcionario.status === 'inativo') {
+                        statusClass = 'badge-danger';
+                        statusText = 'Inativo';
+                    } else if (funcionario.status === 'ferias') {
+                        statusClass = 'badge-warning';
+                        statusText = 'Férias';
+                    }
+                    
+                    html += `
+                        <tr>
+                            <td>${funcionario.codigo}</td>
+                            <td>${funcionario.nome}</td>
+                            <td>${funcionario.cargo}</td>
+                            <td>${funcionario.tipo_contrato}</td>
+                            <td>R$ ${parseFloat(funcionario.salario_base).toFixed(2)}</td>
+                            <td>${funcionario.percentual_comissao}%</td>
+                            <td><span class="badge ${statusClass}">${statusText}</span></td>
+                            <td class="actions">
+                                <div class="action-btn edit-btn" title="Editar" data-id="${funcionario.id}">
+                                    <i class="fas fa-edit"></i>
+                                </div>
+                                <div class="action-btn delete-btn" title="Excluir" data-id="${funcionario.id}">
+                                    <i class="fas fa-trash"></i>
+                                </div>
+                            </td>
+                        </tr>`;
                 });
                 
-                showMessage('cliente-message', 'Cliente adicionado com sucesso!', 'success');
-            }
-            
-            document.getElementById('cliente-form-container').style.display = 'none';
-            carregarClientes();
-            // Atualiza também a lista de clientes para pedidos
-            if (document.getElementById('pedido-cliente')) {
-                atualizarClientesParaPedidos();
-            }
-        }
-
-        // Excluir cliente (mantido da implementação anterior)
-        function excluirCliente(id) {
-            if (confirm('Tem certeza que deseja excluir este cliente?')) {
-                clientes = clientes.filter(c => c.id !== id);
-                showMessage('cliente-message', 'Cliente excluído com sucesso!', 'success');
-                carregarClientes();
-                if (document.getElementById('pedido-cliente')) {
-                    atualizarClientesParaPedidos();
-                }
-            }
-        }
-
-        // ========== FUNCIONALIDADES DE FUNCIONÁRIOS (MANTIDAS) ==========
-
-        // Carregar funcionários na tabela
-        function carregarFuncionarios() {
-            const tbody = document.getElementById('funcionarios-tbody');
-            tbody.innerHTML = '';
-            
-            funcionarios.forEach(funcionario => {
-                let statusClass = 'badge-success';
-                let statusText = 'Ativo';
+                html += `</tbody></table>`;
+                container.innerHTML = html;
                 
-                if (funcionario.status === 'inativo') {
-                    statusClass = 'badge-danger';
-                    statusText = 'Inativo';
-                } else if (funcionario.status === 'ferias') {
-                    statusClass = 'badge-warning';
-                    statusText = 'Férias';
-                }
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${funcionario.codigo}</td>
-                    <td>${funcionario.nome}</td>
-                    <td>${funcionario.cargo}</td>
-                    <td>${funcionario.contrato}</td>
-                    <td>R$ ${funcionario.salario.toFixed(2)}</td>
-                    <td>${funcionario.comissao}%</td>
-                    <td><span class="badge ${statusClass}">${statusText}</span></td>
-                    <td class="actions">
-                        <div class="action-btn edit-btn" title="Editar" data-id="${funcionario.id}">
-                            <i class="fas fa-edit"></i>
-                        </div>
-                        <div class="action-btn delete-btn" title="Excluir" data-id="${funcionario.id}">
-                            <i class="fas fa-trash"></i>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            // Adiciona eventos aos botões
-            adicionarEventosFuncionarios();
+                // Adiciona eventos aos botões
+                adicionarEventosFuncionarios();
+            } catch (error) {
+                console.error('Erro ao carregar funcionários:', error);
+            }
         }
 
-        // Adicionar eventos aos botões de funcionários (mantido da implementação anterior)
         function adicionarEventosFuncionarios() {
             // Botão adicionar funcionário
             document.getElementById('add-funcionario').addEventListener('click', function() {
@@ -1933,161 +2011,173 @@
             });
 
             // Formulário funcionário
-            document.getElementById('funcionario-form').addEventListener('submit', function(e) {
+            document.getElementById('funcionario-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
-                salvarFuncionario();
+                await salvarFuncionario();
             });
 
-            // Botões editar funcionário
-            document.querySelectorAll('#funcionarios-tbody .edit-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const funcionarioId = parseInt(this.getAttribute('data-id'));
-                    editarFuncionario(funcionarioId);
-                });
-            });
-
-            // Botões excluir funcionário
-            document.querySelectorAll('#funcionarios-tbody .delete-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const funcionarioId = parseInt(this.getAttribute('data-id'));
-                    excluirFuncionario(funcionarioId);
-                });
+            // Botões editar/excluir funcionário (delegado)
+            document.getElementById('funcionarios-table-container').addEventListener('click', async function(e) {
+                const editBtn = e.target.closest('.edit-btn');
+                if (editBtn) {
+                    const funcionarioId = parseInt(editBtn.getAttribute('data-id'));
+                    await editarFuncionario(funcionarioId);
+                }
+                
+                const deleteBtn = e.target.closest('.delete-btn');
+                if (deleteBtn) {
+                    const funcionarioId = parseInt(deleteBtn.getAttribute('data-id'));
+                    await excluirFuncionario(funcionarioId);
+                }
             });
         }
 
-        // Editar funcionário (mantido da implementação anterior)
-        function editarFuncionario(id) {
-            const funcionario = funcionarios.find(f => f.id === id);
-            if (!funcionario) return;
-            
-            document.getElementById('funcionario-form-container').style.display = 'block';
-            document.getElementById('funcionario-form-title').textContent = 'Editar Funcionário';
-            document.getElementById('funcionario-id').value = funcionario.id;
-            document.getElementById('funcionario-nome').value = funcionario.nome;
-            document.getElementById('funcionario-cargo').value = funcionario.cargo;
-            document.getElementById('funcionario-contrato').value = funcionario.contrato;
-            document.getElementById('funcionario-salario').value = funcionario.salario;
-            document.getElementById('funcionario-comissao').value = funcionario.comissao;
-            document.getElementById('funcionario-email').value = funcionario.email || '';
-            document.getElementById('funcionario-telefone').value = funcionario.telefone || '';
-            document.getElementById('funcionario-status').value = funcionario.status;
-            document.getElementById('funcionario-submit-btn').textContent = 'Atualizar Funcionário';
-            document.getElementById('funcionario-form-container').scrollIntoView({ behavior: 'smooth' });
+        async function editarFuncionario(id) {
+            try {
+                const data = await fetchData('funcionario_obter', 'POST', { id });
+                
+                if (!data.data) {
+                    showMessage('funcionario-message', 'Funcionário não encontrado', 'error');
+                    return;
+                }
+                
+                const funcionario = data.data;
+                document.getElementById('funcionario-form-container').style.display = 'block';
+                document.getElementById('funcionario-form-title').textContent = 'Editar Funcionário';
+                document.getElementById('funcionario-id').value = funcionario.id;
+                document.getElementById('funcionario-nome').value = funcionario.nome;
+                document.getElementById('funcionario-cargo').value = funcionario.cargo;
+                document.getElementById('funcionario-contrato').value = funcionario.tipo_contrato;
+                document.getElementById('funcionario-salario').value = funcionario.salario_base;
+                document.getElementById('funcionario-comissao').value = funcionario.percentual_comissao;
+                document.getElementById('funcionario-email').value = funcionario.email || '';
+                document.getElementById('funcionario-telefone').value = funcionario.telefone || '';
+                document.getElementById('funcionario-status').value = funcionario.status;
+                document.getElementById('funcionario-submit-btn').textContent = 'Atualizar Funcionário';
+                document.getElementById('funcionario-form-container').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                showMessage('funcionario-message', 'Erro ao carregar funcionário', 'error');
+            }
         }
 
-        // Salvar funcionário (mantido da implementação anterior)
-        function salvarFuncionario() {
-            const id = document.getElementById('funcionario-id').value;
-            const nome = document.getElementById('funcionario-nome').value;
-            const cargo = document.getElementById('funcionario-cargo').value;
-            const contrato = document.getElementById('funcionario-contrato').value;
-            const salario = parseFloat(document.getElementById('funcionario-salario').value);
-            const comissao = parseFloat(document.getElementById('funcionario-comissao').value);
-            const email = document.getElementById('funcionario-email').value;
-            const telefone = document.getElementById('funcionario-telefone').value;
-            const status = document.getElementById('funcionario-status').value;
-            
-            if (id) {
-                // Atualizar funcionário existente
-                const index = funcionarios.findIndex(f => f.id === parseInt(id));
-                if (index !== -1) {
-                    funcionarios[index] = {
-                        ...funcionarios[index],
-                        nome, cargo, contrato, salario, comissao, email, telefone, status
-                    };
+        async function salvarFuncionario() {
+            try {
+                const id = document.getElementById('funcionario-id').value;
+                const funcionarioData = {
+                    nome: document.getElementById('funcionario-nome').value,
+                    cargo: document.getElementById('funcionario-cargo').value,
+                    tipo_contrato: document.getElementById('funcionario-contrato').value,
+                    salario_base: parseFloat(document.getElementById('funcionario-salario').value),
+                    percentual_comissao: parseFloat(document.getElementById('funcionario-comissao').value),
+                    email: document.getElementById('funcionario-email').value,
+                    telefone: document.getElementById('funcionario-telefone').value,
+                    status: document.getElementById('funcionario-status').value
+                };
+                
+                let result;
+                if (id) {
+                    // Atualizar funcionário existente
+                    funcionarioData.id = id;
+                    result = await fetchData('funcionario_atualizar', 'PUT', funcionarioData);
                     showMessage('funcionario-message', 'Funcionário atualizado com sucesso!', 'success');
+                } else {
+                    // Adicionar novo funcionário
+                    result = await fetchData('funcionario_criar', 'POST', funcionarioData);
+                    showMessage('funcionario-message', 'Funcionário adicionado com sucesso!', 'success');
                 }
-            } else {
-                // Adicionar novo funcionário
-                const novoId = funcionarios.length > 0 ? Math.max(...funcionarios.map(f => f.id)) + 1 : 1;
-                const codigo = `#FUNC-${novoId.toString().padStart(3, '0')}`;
                 
-                funcionarios.push({
-                    id: novoId,
-                    codigo,
-                    nome,
-                    cargo,
-                    contrato,
-                    salario,
-                    comissao,
-                    email,
-                    telefone,
-                    status
+                document.getElementById('funcionario-form-container').style.display = 'none';
+                await carregarFuncionarios();
+                await atualizarFuncionariosParaPedidos();
+            } catch (error) {
+                showMessage('funcionario-message', 'Erro ao salvar funcionário', 'error');
+            }
+        }
+
+        async function excluirFuncionario(id) {
+            if (!confirm('Tem certeza que deseja excluir este funcionário?')) return;
+            
+            try {
+                await fetchData('funcionario_excluir', 'DELETE', { id });
+                showMessage('funcionario-message', 'Funcionário excluído com sucesso!', 'success');
+                await carregarFuncionarios();
+                await atualizarFuncionariosParaPedidos();
+            } catch (error) {
+                showMessage('funcionario-message', 'Erro ao excluir funcionário', 'error');
+            }
+        }
+
+        // ========== FUNCIONALIDADES DE PRODUTOS ==========
+
+        async function carregarProdutos() {
+            try {
+                const data = await fetchData('produtos_listar');
+                const container = document.getElementById('produtos-table-container');
+                
+                if (!data.data || data.data.length === 0) {
+                    container.innerHTML = '<p>Nenhum produto cadastrado.</p>';
+                    return;
+                }
+                
+                let html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Preço</th>
+                                <th>Estoque</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                
+                data.data.forEach(produto => {
+                    let statusClass = 'badge-success';
+                    let statusText = 'Ativo';
+                    
+                    if (produto.status === 'inativo') {
+                        statusClass = 'badge-danger';
+                        statusText = 'Inativo';
+                    }
+                    
+                    // Verifica se precisa de reposição
+                    const precisaReposicao = produto.estoque <= produto.estoque_minimo;
+                    
+                    html += `
+                        <tr>
+                            <td>${produto.codigo}</td>
+                            <td>${produto.nome}</td>
+                            <td>${produto.categoria}</td>
+                            <td>R$ ${parseFloat(produto.preco).toFixed(2)}</td>
+                            <td>
+                                ${produto.estoque}
+                                ${precisaReposicao ? '<span class="badge badge-warning" style="margin-left: 5px;">Repor</span>' : ''}
+                            </td>
+                            <td><span class="badge ${statusClass}">${statusText}</span></td>
+                            <td class="actions">
+                                <div class="action-btn edit-btn" title="Editar" data-id="${produto.id}">
+                                    <i class="fas fa-edit"></i>
+                                </div>
+                                <div class="action-btn delete-btn" title="Excluir" data-id="${produto.id}">
+                                    <i class="fas fa-trash"></i>
+                                </div>
+                            </td>
+                        </tr>`;
                 });
                 
-                showMessage('funcionario-message', 'Funcionário adicionado com sucesso!', 'success');
-            }
-            
-            document.getElementById('funcionario-form-container').style.display = 'none';
-            carregarFuncionarios();
-            // Atualiza também a lista de funcionários para pedidos
-            if (document.getElementById('pedido-vendedor')) {
-                atualizarFuncionariosParaPedidos();
-            }
-        }
-
-        // Excluir funcionário (mantido da implementação anterior)
-        function excluirFuncionario(id) {
-            if (confirm('Tem certeza que deseja excluir este funcionário?')) {
-                funcionarios = funcionarios.filter(f => f.id !== id);
-                showMessage('funcionario-message', 'Funcionário excluído com sucesso!', 'success');
-                carregarFuncionarios();
-                if (document.getElementById('pedido-vendedor')) {
-                    atualizarFuncionariosParaPedidos();
-                }
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+                
+                // Adiciona eventos aos botões
+                adicionarEventosProdutos();
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
             }
         }
 
-        // ========== FUNCIONALIDADES DE PRODUTOS (MANTIDAS) ==========
-
-        // Carregar produtos na tabela
-        function carregarProdutos() {
-            const tbody = document.getElementById('produtos-tbody');
-            tbody.innerHTML = '';
-            
-            produtos.forEach(produto => {
-                let statusClass = 'badge-success';
-                let statusText = 'Ativo';
-                
-                if (produto.status === 'inativo') {
-                    statusClass = 'badge-danger';
-                    statusText = 'Inativo';
-                } else if (produto.status === 'esgotado') {
-                    statusClass = 'badge-warning';
-                    statusText = 'Esgotado';
-                }
-                
-                // Verifica se precisa de reposição
-                const precisaReposicao = produto.estoque <= produto.estoqueMin;
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${produto.codigo}</td>
-                    <td>${produto.nome}</td>
-                    <td>${produto.categoria}</td>
-                    <td>R$ ${produto.preco.toFixed(2)}</td>
-                    <td>
-                        ${produto.estoque}
-                        ${precisaReposicao ? '<span class="badge badge-warning" style="margin-left: 5px;">Repor</span>' : ''}
-                    </td>
-                    <td><span class="badge ${statusClass}">${statusText}</span></td>
-                    <td class="actions">
-                        <div class="action-btn edit-btn" title="Editar" data-id="${produto.id}">
-                            <i class="fas fa-edit"></i>
-                        </div>
-                        <div class="action-btn delete-btn" title="Excluir" data-id="${produto.id}">
-                            <i class="fas fa-trash"></i>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            // Adiciona eventos aos botões
-            adicionarEventosProdutos();
-        }
-
-        // Adicionar eventos aos botões de produtos (mantido da implementação anterior)
         function adicionarEventosProdutos() {
             // Botão adicionar produto
             document.getElementById('add-produto').addEventListener('click', function() {
@@ -2095,7 +2185,6 @@
                 document.getElementById('produto-form-title').textContent = 'Adicionar Produto';
                 document.getElementById('produto-id').value = '';
                 document.getElementById('produto-form').reset();
-                document.getElementById('produto-codigo').value = `#PROD-${(produtos.length + 1).toString().padStart(3, '0')}`;
                 document.getElementById('produto-estoque-min').value = '5';
                 document.getElementById('produto-status').value = 'ativo';
                 document.getElementById('produto-submit-btn').textContent = 'Salvar Produto';
@@ -2108,149 +2197,166 @@
             });
 
             // Formulário produto
-            document.getElementById('produto-form').addEventListener('submit', function(e) {
+            document.getElementById('produto-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
-                salvarProduto();
+                await salvarProduto();
             });
 
-            // Botões editar produto
-            document.querySelectorAll('#produtos-tbody .edit-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const produtoId = parseInt(this.getAttribute('data-id'));
-                    editarProduto(produtoId);
-                });
-            });
-
-            // Botões excluir produto
-            document.querySelectorAll('#produtos-tbody .delete-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const produtoId = parseInt(this.getAttribute('data-id'));
-                    excluirProduto(produtoId);
-                });
+            // Botões editar/excluir produto (delegado)
+            document.getElementById('produtos-table-container').addEventListener('click', async function(e) {
+                const editBtn = e.target.closest('.edit-btn');
+                if (editBtn) {
+                    const produtoId = parseInt(editBtn.getAttribute('data-id'));
+                    await editarProduto(produtoId);
+                }
+                
+                const deleteBtn = e.target.closest('.delete-btn');
+                if (deleteBtn) {
+                    const produtoId = parseInt(deleteBtn.getAttribute('data-id'));
+                    await excluirProduto(produtoId);
+                }
             });
         }
 
-        // Editar produto (mantido da implementação anterior)
-        function editarProduto(id) {
-            const produto = produtos.find(p => p.id === id);
-            if (!produto) return;
-            
-            document.getElementById('produto-form-container').style.display = 'block';
-            document.getElementById('produto-form-title').textContent = 'Editar Produto';
-            document.getElementById('produto-id').value = produto.id;
-            document.getElementById('produto-codigo').value = produto.codigo;
-            document.getElementById('produto-nome').value = produto.nome;
-            document.getElementById('produto-categoria').value = produto.categoria;
-            document.getElementById('produto-descricao').value = produto.descricao || '';
-            document.getElementById('produto-preco').value = produto.preco;
-            document.getElementById('produto-custo').value = produto.custo || '';
-            document.getElementById('produto-estoque').value = produto.estoque;
-            document.getElementById('produto-estoque-min').value = produto.estoqueMin || 5;
-            document.getElementById('produto-status').value = produto.status;
-            document.getElementById('produto-submit-btn').textContent = 'Atualizar Produto';
-            document.getElementById('produto-form-container').scrollIntoView({ behavior: 'smooth' });
+        async function editarProduto(id) {
+            try {
+                const data = await fetchData('produto_obter', 'POST', { id });
+                
+                if (!data.data) {
+                    showMessage('produto-message', 'Produto não encontrado', 'error');
+                    return;
+                }
+                
+                const produto = data.data;
+                document.getElementById('produto-form-container').style.display = 'block';
+                document.getElementById('produto-form-title').textContent = 'Editar Produto';
+                document.getElementById('produto-id').value = produto.id;
+                document.getElementById('produto-codigo').value = produto.codigo;
+                document.getElementById('produto-nome').value = produto.nome;
+                document.getElementById('produto-categoria').value = produto.categoria;
+                document.getElementById('produto-descricao').value = produto.descricao || '';
+                document.getElementById('produto-preco').value = produto.preco;
+                document.getElementById('produto-custo').value = produto.custo || '';
+                document.getElementById('produto-estoque').value = produto.estoque;
+                document.getElementById('produto-estoque-min').value = produto.estoque_minimo || 5;
+                document.getElementById('produto-status').value = produto.status;
+                document.getElementById('produto-submit-btn').textContent = 'Atualizar Produto';
+                document.getElementById('produto-form-container').scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                showMessage('produto-message', 'Erro ao carregar produto', 'error');
+            }
         }
 
-        // Salvar produto (mantido da implementação anterior)
-        function salvarProduto() {
-            const id = document.getElementById('produto-id').value;
-            const codigo = document.getElementById('produto-codigo').value;
-            const nome = document.getElementById('produto-nome').value;
-            const categoria = document.getElementById('produto-categoria').value;
-            const descricao = document.getElementById('produto-descricao').value;
-            const preco = parseFloat(document.getElementById('produto-preco').value);
-            const custo = parseFloat(document.getElementById('produto-custo').value) || 0;
-            const estoque = parseInt(document.getElementById('produto-estoque').value);
-            const estoqueMin = parseInt(document.getElementById('produto-estoque-min').value) || 5;
-            const status = document.getElementById('produto-status').value;
-            
-            if (id) {
-                // Atualizar produto existente
-                const index = produtos.findIndex(p => p.id === parseInt(id));
-                if (index !== -1) {
-                    produtos[index] = {
-                        ...produtos[index],
-                        codigo, nome, categoria, descricao, preco, custo, estoque, estoqueMin, status
-                    };
+        async function salvarProduto() {
+            try {
+                const id = document.getElementById('produto-id').value;
+                const produtoData = {
+                    codigo: document.getElementById('produto-codigo').value,
+                    nome: document.getElementById('produto-nome').value,
+                    categoria: document.getElementById('produto-categoria').value,
+                    descricao: document.getElementById('produto-descricao').value,
+                    preco: parseFloat(document.getElementById('produto-preco').value),
+                    custo: parseFloat(document.getElementById('produto-custo').value) || 0,
+                    estoque: parseInt(document.getElementById('produto-estoque').value),
+                    estoque_minimo: parseInt(document.getElementById('produto-estoque-min').value) || 5,
+                    status: document.getElementById('produto-status').value
+                };
+                
+                let result;
+                if (id) {
+                    // Atualizar produto existente
+                    produtoData.id = id;
+                    result = await fetchData('produto_atualizar', 'PUT', produtoData);
                     showMessage('produto-message', 'Produto atualizado com sucesso!', 'success');
+                } else {
+                    // Adicionar novo produto
+                    result = await fetchData('produto_criar', 'POST', produtoData);
+                    showMessage('produto-message', 'Produto adicionado com sucesso!', 'success');
                 }
-            } else {
-                // Adicionar novo produto
-                const novoId = produtos.length > 0 ? Math.max(...produtos.map(p => p.id)) + 1 : 1;
                 
-                produtos.push({
-                    id: novoId,
-                    codigo,
-                    nome,
-                    categoria,
-                    descricao,
-                    preco,
-                    custo,
-                    estoque,
-                    estoqueMin,
-                    status,
-                    visualizacoes: 0,
-                    avaliacao: 0
+                document.getElementById('produto-form-container').style.display = 'none';
+                await carregarProdutos();
+                // Se estiver na página de pedidos, atualiza produtos disponíveis
+                if (document.getElementById('produtos-disponiveis')) {
+                    await carregarProdutosParaPedidos();
+                }
+            } catch (error) {
+                showMessage('produto-message', 'Erro ao salvar produto', 'error');
+            }
+        }
+
+        async function excluirProduto(id) {
+            if (!confirm('Tem certeza que deseja excluir este produto?')) return;
+            
+            try {
+                await fetchData('produto_excluir', 'DELETE', { id });
+                showMessage('produto-message', 'Produto excluído com sucesso!', 'success');
+                await carregarProdutos();
+                // Se estiver na página de pedidos, atualiza produtos disponíveis
+                if (document.getElementById('produtos-disponiveis')) {
+                    await carregarProdutosParaPedidos();
+                }
+            } catch (error) {
+                showMessage('produto-message', 'Erro ao excluir produto', 'error');
+            }
+        }
+
+        // ========== FUNCIONALIDADES DE PEDIDOS ==========
+
+        async function carregarPedidos() {
+            try {
+                const data = await fetchData('pedidos_listar');
+                const container = document.getElementById('pedidos-table-container');
+                
+                if (!data.data || data.data.length === 0) {
+                    container.innerHTML = '<p>Nenhum pedido cadastrado.</p>';
+                    return;
+                }
+                
+                let html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Pedido</th>
+                                <th>Cliente</th>
+                                <th>Data</th>
+                                <th>Itens</th>
+                                <th>Valor Total</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                
+                data.data.forEach(pedido => {
+                    let statusClass = 'status-pendente';
+                    if (pedido.status === 'faturado') statusClass = 'status-faturado';
+                    if (pedido.status === 'cancelado') statusClass = 'status-cancelado';
+                    
+                    const statusText = pedido.status === 'pendente' ? 'Pendente' : 
+                                     pedido.status === 'faturado' ? 'Faturado' : 'Cancelado';
+                    
+                    html += `
+                        <tr>
+                            <td>${pedido.codigo}</td>
+                            <td>${pedido.nome_cliente}</td>
+                            <td>${pedido.data}</td>
+                            <td>${pedido.total_itens} itens</td>
+                            <td>R$ ${parseFloat(pedido.valor_total).toFixed(2)}</td>
+                            <td><span class="status ${statusClass}">${statusText}</span></td>
+                            <td class="actions">
+                                <div class="action-btn view-btn" title="Visualizar" data-id="${pedido.id}">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                            </td>
+                        </tr>`;
                 });
                 
-                showMessage('produto-message', 'Produto adicionado com sucesso!', 'success');
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+            } catch (error) {
+                console.error('Erro ao carregar pedidos:', error);
             }
-            
-            document.getElementById('produto-form-container').style.display = 'none';
-            carregarProdutos();
-            // Atualiza também os produtos para novos pedidos
-            if (document.getElementById('produtos-disponiveis')) {
-                carregarProdutosParaPedidos();
-            }
-        }
-
-        // Excluir produto (mantido da implementação anterior)
-        function excluirProduto(id) {
-            if (confirm('Tem certeza que deseja excluir este produto?')) {
-                produtos = produtos.filter(p => p.id !== id);
-                showMessage('produto-message', 'Produto excluído com sucesso!', 'success');
-                carregarProdutos();
-                if (document.getElementById('produtos-disponiveis')) {
-                    carregarProdutosParaPedidos();
-                }
-            }
-        }
-
-        // ========== FUNCIONALIDADES DE PEDIDOS (NOVAS) ==========
-
-        // Carregar pedidos na tabela
-        function carregarPedidos() {
-            const tbody = document.getElementById('pedidos-tbody');
-            tbody.innerHTML = '';
-            
-            pedidos.forEach(pedido => {
-                // Encontrar cliente e vendedor
-                const cliente = clientes.find(c => c.id === pedido.clienteId);
-                const vendedor = funcionarios.find(f => f.id === pedido.vendedorId);
-                
-                let statusClass = 'status-pendente';
-                if (pedido.status === 'faturado') statusClass = 'status-faturado';
-                if (pedido.status === 'cancelado') statusClass = 'status-cancelado';
-                
-                const statusText = pedido.status === 'pendente' ? 'Pendente' : 
-                                 pedido.status === 'faturado' ? 'Faturado' : 'Cancelado';
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${pedido.codigo}</td>
-                    <td>${cliente ? cliente.nome : 'Cliente não encontrado'}</td>
-                    <td>${pedido.data}</td>
-                    <td>${pedido.itens} itens</td>
-                    <td>R$ ${pedido.valorTotal.toFixed(2)}</td>
-                    <td><span class="status ${statusClass}">${statusText}</span></td>
-                    <td class="actions">
-                        <div class="action-btn view-btn" title="Visualizar" data-id="${pedido.id}">
-                            <i class="fas fa-eye"></i>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
         }
 
         // Mostrar lista de pedidos (modo padrão)
@@ -2262,7 +2368,7 @@
         }
 
         // Mostrar tela de novo pedido
-        function mostrarNovoPedido() {
+        async function mostrarNovoPedido() {
             document.getElementById('lista-pedidos').style.display = 'none';
             document.getElementById('novo-pedido-container').classList.add('active');
             document.getElementById('page-title').textContent = 'Novo Pedido';
@@ -2274,10 +2380,10 @@
             document.getElementById('pedido-data').textContent = dataFormatada;
             
             // Carrega dados
-            atualizarClientesParaPedidos();
-            atualizarFuncionariosParaPedidos();
-            carregarProdutosParaPedidos();
-            carregarCategoriasFiltro();
+            await atualizarClientesParaPedidos();
+            await atualizarFuncionariosParaPedidos();
+            await carregarProdutosParaPedidos();
+            await carregarCategoriasFiltro();
             
             // Limpa carrinho e desconto
             carrinho = [];
@@ -2296,116 +2402,169 @@
             document.querySelectorAll('.categoria-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.querySelector('.categoria-btn[data-categoria="todos"]').classList.add('active');
+            const todosBtn = document.querySelector('.categoria-btn[data-categoria="todos"]');
+            if (todosBtn) {
+                todosBtn.classList.add('active');
+            }
         }
 
         // Atualizar lista de clientes para pedidos
-        function atualizarClientesParaPedidos() {
-            const select = document.getElementById('pedido-cliente');
-            select.innerHTML = '<option value="">Selecione um cliente...</option>';
-            
-            clientes.filter(c => c.status === 'ativo').forEach(cliente => {
-                const option = document.createElement('option');
-                option.value = cliente.id;
-                option.textContent = `${cliente.nome} (${cliente.codigo})`;
-                select.appendChild(option);
-            });
+        async function atualizarClientesParaPedidos() {
+            try {
+                const data = await fetchData('clientes_listar');
+                const select = document.getElementById('pedido-cliente');
+                select.innerHTML = '<option value="">Selecione um cliente...</option>';
+                
+                if (data.data) {
+                    data.data.filter(c => c.status === 'ativo').forEach(cliente => {
+                        const option = document.createElement('option');
+                        option.value = cliente.id;
+                        option.textContent = `${cliente.nome} (${cliente.codigo})`;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar clientes para pedidos:', error);
+            }
         }
 
         // Atualizar lista de funcionários para pedidos
-        function atualizarFuncionariosParaPedidos() {
-            const select = document.getElementById('pedido-vendedor');
-            select.innerHTML = '<option value="">Selecione um vendedor...</option>';
-            
-            funcionarios.filter(f => f.status === 'ativo' && f.cargo === 'Vendedor').forEach(funcionario => {
-                const option = document.createElement('option');
-                option.value = funcionario.id;
-                option.textContent = `${funcionario.nome} (${funcionario.codigo})`;
-                select.appendChild(option);
-            });
+        async function atualizarFuncionariosParaPedidos() {
+            try {
+                const data = await fetchData('funcionarios_listar');
+                const select = document.getElementById('pedido-vendedor');
+                select.innerHTML = '<option value="">Selecione um vendedor...</option>';
+                
+                if (data.data) {
+                    data.data.filter(f => f.status === 'ativo' && f.cargo === 'Vendedor').forEach(funcionario => {
+                        const option = document.createElement('option');
+                        option.value = funcionario.id;
+                        option.textContent = `${funcionario.nome} (${funcionario.codigo})`;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar funcionários para pedidos:', error);
+            }
         }
 
         // Carregar produtos para pedidos
-        function carregarProdutosParaPedidos() {
-            const container = document.getElementById('produtos-disponiveis');
-            const busca = document.getElementById('busca-produto').value.toLowerCase();
-            
-            container.innerHTML = '';
-            
-            // Filtra produtos por categoria e busca
-            const produtosFiltrados = produtos.filter(produto => {
-                // Filtro de categoria
-                if (categoriaFiltro !== 'todos' && produto.categoria !== categoriaFiltro) {
-                    return false;
+        async function carregarProdutosParaPedidos() {
+            try {
+                const data = await fetchData('produtos_disponiveis');
+                const container = document.getElementById('produtos-disponiveis');
+                const busca = document.getElementById('busca-produto')?.value.toLowerCase() || '';
+                
+                container.innerHTML = '';
+                
+                if (!data.data || data.data.length === 0) {
+                    container.innerHTML = '<div class="carrinho-vazio">Nenhum produto disponível</div>';
+                    return;
                 }
                 
-                // Filtro de busca
-                if (busca && !produto.nome.toLowerCase().includes(busca)) {
-                    return false;
+                // Filtra produtos por categoria e busca
+                const produtosFiltrados = data.data.filter(produto => {
+                    // Filtro de categoria
+                    if (categoriaFiltro !== 'todos' && produto.categoria !== categoriaFiltro) {
+                        return false;
+                    }
+                    
+                    // Filtro de busca
+                    if (busca && !produto.nome.toLowerCase().includes(busca)) {
+                        return false;
+                    }
+                    
+                    // Mostra apenas produtos ativos com estoque > 0
+                    return produto.status === 'ativo' && produto.estoque > 0;
+                });
+                
+                if (produtosFiltrados.length === 0) {
+                    container.innerHTML = '<div class="carrinho-vazio">Nenhum produto encontrado</div>';
+                    return;
                 }
                 
-                // Mostra apenas produtos ativos com estoque > 0
-                return produto.status === 'ativo' && produto.estoque > 0;
-            });
-            
-            if (produtosFiltrados.length === 0) {
-                container.innerHTML = '<div class="carrinho-vazio">Nenhum produto encontrado</div>';
-                return;
+                produtosFiltrados.forEach(produto => {
+                    const estoqueClass = produto.estoque <= produto.estoque_minimo ? 'baixo' : '';
+                    
+                    const produtoCard = document.createElement('div');
+                    produtoCard.className = 'produto-card';
+                    produtoCard.dataset.id = produto.id;
+                    produtoCard.innerHTML = `
+                        <div class="produto-nome">${produto.nome}</div>
+                        <div class="produto-preco">R$ ${parseFloat(produto.preco).toFixed(2)}</div>
+                        <div class="produto-info">
+                            ${produto.codigo}<br>
+                            Categoria: ${produto.categoria}
+                        </div>
+                        <div class="produto-estoque ${estoqueClass}">
+                            Estoque: ${produto.estoque} unidades
+                        </div>
+                    `;
+                    
+                    produtoCard.addEventListener('click', () => adicionarAoCarrinho(produto.id, produto));
+                    container.appendChild(produtoCard);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar produtos para pedidos:', error);
+                const container = document.getElementById('produtos-disponiveis');
+                container.innerHTML = '<div class="carrinho-vazio">Erro ao carregar produtos</div>';
             }
-            
-            produtosFiltrados.forEach(produto => {
-                const estoqueClass = produto.estoque <= produto.estoqueMin ? 'baixo' : '';
-                
-                const produtoCard = document.createElement('div');
-                produtoCard.className = 'produto-card';
-                produtoCard.dataset.id = produto.id;
-                produtoCard.innerHTML = `
-                    <div class="produto-nome">${produto.nome}</div>
-                    <div class="produto-preco">R$ ${produto.preco.toFixed(2)}</div>
-                    <div class="produto-info">
-                        ${produto.codigo}<br>
-                        Categoria: ${produto.categoria}
-                    </div>
-                    <div class="produto-estoque ${estoqueClass}">
-                        Estoque: ${produto.estoque} unidades
-                    </div>
-                `;
-                
-                produtoCard.addEventListener('click', () => adicionarAoCarrinho(produto.id));
-                container.appendChild(produtoCard);
-            });
         }
 
         // Carregar categorias para filtro
-        function carregarCategoriasFiltro() {
-            const container = document.getElementById('categorias-filtro');
-            container.innerHTML = '';
-            
-            // Extrai categorias únicas dos produtos
-            const categorias = ['todos', ...new Set(produtos.map(p => p.categoria))];
-            
-            categorias.forEach(categoria => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = `categoria-btn ${categoria === 'todos' ? 'active' : ''}`;
-                btn.textContent = categoria === 'todos' ? 'Todos' : categoria;
-                btn.dataset.categoria = categoria;
+        async function carregarCategoriasFiltro() {
+            try {
+                const data = await fetchData('categorias_listar');
+                const container = document.getElementById('categorias-filtro');
+                container.innerHTML = '';
                 
-                btn.addEventListener('click', () => {
-                    categoriaFiltro = categoria;
+                // Categoria "Todos"
+                const btnTodos = document.createElement('button');
+                btnTodos.type = 'button';
+                btnTodos.className = 'categoria-btn active';
+                btnTodos.textContent = 'Todos';
+                btnTodos.dataset.categoria = 'todos';
+                
+                btnTodos.addEventListener('click', () => {
+                    categoriaFiltro = 'todos';
                     document.querySelectorAll('.categoria-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
+                    btnTodos.classList.add('active');
                     carregarProdutosParaPedidos();
                 });
                 
-                container.appendChild(btn);
-            });
+                container.appendChild(btnTodos);
+                
+                // Outras categorias
+                if (data.data && data.data.length > 0) {
+                    data.data.forEach(categoria => {
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'categoria-btn';
+                        btn.textContent = categoria.nome;
+                        btn.dataset.categoria = categoria.nome;
+                        
+                        btn.addEventListener('click', () => {
+                            categoriaFiltro = categoria.nome;
+                            document.querySelectorAll('.categoria-btn').forEach(b => b.classList.remove('active'));
+                            btn.classList.add('active');
+                            carregarProdutosParaPedidos();
+                        });
+                        
+                        container.appendChild(btn);
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao carregar categorias:', error);
+            }
         }
 
         // Adicionar produto ao carrinho
-        function adicionarAoCarrinho(produtoId) {
-            const produto = produtos.find(p => p.id === produtoId);
-            if (!produto || produto.estoque <= 0) return;
+        function adicionarAoCarrinho(produtoId, produto) {
+            if (!produto) {
+                // Busca produto na lista local (se disponível)
+                console.error('Produto não encontrado');
+                return;
+            }
             
             // Verifica se o produto já está no carrinho
             const itemIndex = carrinho.findIndex(item => item.id === produtoId);
@@ -2424,14 +2583,14 @@
                     id: produtoId,
                     codigo: produto.codigo,
                     nome: produto.nome,
-                    preco: produto.preco,
+                    preco: parseFloat(produto.preco),
                     quantidade: 1,
                     estoqueDisponivel: produto.estoque
                 });
             }
             
             atualizarCarrinho();
-            mostrarRecomendacoes(produtoId);
+            // Mostrar recomendações seria implementado com lógica específica
         }
 
         // Atualizar carrinho
@@ -2506,13 +2665,12 @@
             document.querySelectorAll('.aumentar').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const index = parseInt(this.getAttribute('data-index'));
-                    const produto = produtos.find(p => p.id === carrinho[index].id);
                     
-                    if (carrinho[index].quantidade < produto.estoque) {
+                    if (carrinho[index].quantidade < carrinho[index].estoqueDisponivel) {
                         carrinho[index].quantidade += 1;
                         atualizarCarrinho();
                     } else {
-                        alert(`Estoque máximo atingido! Disponível: ${produto.estoque} unidades.`);
+                        alert(`Estoque máximo atingido! Disponível: ${carrinho[index].estoqueDisponivel} unidades.`);
                     }
                 });
             });
@@ -2539,13 +2697,12 @@
                 input.addEventListener('change', function() {
                     const index = parseInt(this.getAttribute('data-index'));
                     const novaQuantidade = parseInt(this.value);
-                    const produto = produtos.find(p => p.id === carrinho[index].id);
                     
-                    if (novaQuantidade >= 1 && novaQuantidade <= produto.estoque) {
+                    if (novaQuantidade >= 1 && novaQuantidade <= carrinho[index].estoqueDisponivel) {
                         carrinho[index].quantidade = novaQuantidade;
                         atualizarCarrinho();
-                    } else if (novaQuantidade > produto.estoque) {
-                        alert(`Estoque insuficiente! Disponível: ${produto.estoque} unidades.`);
+                    } else if (novaQuantidade > carrinho[index].estoqueDisponivel) {
+                        alert(`Estoque insuficiente! Disponível: ${carrinho[index].estoqueDisponivel} unidades.`);
                         this.value = carrinho[index].quantidade;
                     } else if (novaQuantidade < 1) {
                         carrinho.splice(index, 1);
@@ -2564,44 +2721,6 @@
                     esconderRecomendacoes();
                 });
             });
-        }
-
-        // Mostrar recomendações
-        function mostrarRecomendacoes(produtoId) {
-            const recomendacoes = produtosRecomendados[produtoId];
-            if (!recomendacoes || recomendacoes.length === 0) {
-                esconderRecomendacoes();
-                return;
-            }
-            
-            const container = document.getElementById('recomendacoes-container');
-            const grid = document.getElementById('produtos-recomendados');
-            
-            grid.innerHTML = '';
-            
-            recomendacoes.forEach(produtoRecId => {
-                const produto = produtos.find(p => p.id === produtoRecId);
-                if (!produto || produto.status !== 'ativo' || produto.estoque <= 0) return;
-                
-                // Verifica se já está no carrinho
-                const jaNoCarrinho = carrinho.some(item => item.id === produto.id);
-                if (jaNoCarrinho) return;
-                
-                const item = document.createElement('div');
-                item.className = 'recomendacao-item';
-                item.innerHTML = `${produto.nome} - R$ ${produto.preco.toFixed(2)}`;
-                item.title = `Adicionar ${produto.nome} ao carrinho`;
-                
-                item.addEventListener('click', () => adicionarAoCarrinho(produto.id));
-                grid.appendChild(item);
-            });
-            
-            // Mostra apenas se houver recomendações
-            if (grid.children.length > 0) {
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
         }
 
         // Esconder recomendações
@@ -2627,7 +2746,7 @@
         });
 
         // Botão Finalizar Pedido
-        document.getElementById('finalizar-pedido').addEventListener('click', function() {
+        document.getElementById('finalizar-pedido').addEventListener('click', async function() {
             const clienteId = document.getElementById('pedido-cliente').value;
             const vendedorId = document.getElementById('pedido-vendedor').value;
             const status = document.getElementById('pedido-status').value;
@@ -2648,62 +2767,48 @@
                 return;
             }
             
-            // Valida estoque dos produtos
-            for (const item of carrinho) {
-                const produto = produtos.find(p => p.id === item.id);
-                if (!produto || item.quantidade > produto.estoque) {
-                    alert(`Estoque insuficiente para ${produto.nome}. Disponível: ${produto.estoque}`);
-                    return;
-                }
-            }
-            
-            // Calcula valor total
-            const subtotal = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
-            const valorTotal = subtotal - desconto;
-            
-            // Cria novo pedido
-            const novoId = pedidos.length > 0 ? Math.max(...pedidos.map(p => p.id)) + 1 : 1;
-            const codigo = `#PED-${(1000 + novoId).toString()}`;
-            const data = new Date().toLocaleDateString('pt-BR');
-            const itens = carrinho.reduce((sum, item) => sum + item.quantidade, 0);
-            
-            const novoPedido = {
-                id: novoId,
-                codigo,
-                clienteId: parseInt(clienteId),
-                vendedorId: parseInt(vendedorId),
-                data,
-                itens,
-                valorTotal,
-                status
+            // Prepara dados do pedido
+            const pedidoData = {
+                cliente_id: parseInt(clienteId),
+                vendedor_id: parseInt(vendedorId),
+                status: status,
+                itens: carrinho.map(item => ({
+                    produto_id: item.id,
+                    quantidade: item.quantidade,
+                    preco_unitario: item.preco
+                }))
             };
             
-            // Adiciona pedido à lista
-            pedidos.push(novoPedido);
+            // Calcula subtotal e desconto
+            const subtotal = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+            pedidoData.valor_desconto = desconto;
+            pedidoData.valor_total = subtotal - desconto;
             
-            // Atualiza estoque dos produtos
-            carrinho.forEach(item => {
-                const produtoIndex = produtos.findIndex(p => p.id === item.id);
-                if (produtoIndex !== -1) {
-                    produtos[produtoIndex].estoque -= item.quantidade;
-                }
-            });
-            
-            // Mensagem de sucesso
-            showMessage('pedido-message', `Pedido ${codigo} criado com sucesso!`, 'success');
-            
-            // Volta para lista de pedidos após 2 segundos
-            setTimeout(() => {
-                mostrarListaPedidos();
-                carregarPedidos();
-                carregarProdutos(); // Atualiza estoque na lista de produtos
-            }, 2000);
+            try {
+                // Envia pedido para o servidor
+                const result = await fetchData('pedido_criar', 'POST', pedidoData);
+                
+                showMessage('pedido-message', `Pedido ${result.data?.codigo || ''} criado com sucesso!`, 'success');
+                
+                // Volta para lista de pedidos após 2 segundos
+                setTimeout(() => {
+                    mostrarListaPedidos();
+                    carregarPedidos();
+                    carregarProdutos(); // Atualiza estoque na lista de produtos
+                    carregarDashboard(); // Atualiza dashboard
+                }, 2000);
+            } catch (error) {
+                alert('Erro ao criar pedido: ' + error.message);
+            }
         });
 
         // Busca de produtos
-        document.getElementById('busca-produto').addEventListener('input', function() {
-            carregarProdutosParaPedidos();
-        });
+        const buscaProdutoInput = document.getElementById('busca-produto');
+        if (buscaProdutoInput) {
+            buscaProdutoInput.addEventListener('input', function() {
+                carregarProdutosParaPedidos();
+            });
+        }
 
         // Botão Aplicar Desconto
         document.getElementById('aplicar-desconto-btn').addEventListener('click', function() {
@@ -2777,38 +2882,16 @@
             }
         });
 
-        // ========== FUNÇÕES AUXILIARES ==========
-
-        // Mostrar mensagem
-        function showMessage(elementId, message, type = 'success') {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.className = `message message-${type}`;
-            element.style.display = 'block';
-            
-            setTimeout(() => {
-                element.style.display = 'none';
-            }, 3000);
-        }
-
-        // Atualização dinâmica da interface
-        function updateDateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-        }
-
         // ========== INICIALIZAÇÃO ==========
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Carrega dados iniciais
-            carregarClientes();
-            carregarFuncionarios();
-            carregarProdutos();
-            carregarPedidos();
+            // Carrega dados iniciais do dashboard
+            carregarDashboard();
             
-            // Atualizar a cada minuto
-            setInterval(updateDateTime, 60000);
-            updateDateTime();
+            // Inicializa eventos dos formulários
+            adicionarEventosClientes();
+            adicionarEventosFuncionarios();
+            adicionarEventosProdutos();
         });
 
     </script>
